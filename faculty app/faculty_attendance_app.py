@@ -198,7 +198,6 @@ class StartPage(QWidget):
         self.init_ui()
 
     def init_ui(self):
-
         # Main layout
         main_layout = QVBoxLayout(self)
         main_layout.setSpacing(0)
@@ -304,7 +303,7 @@ class StartPage(QWidget):
         card_layout.addWidget(logo_label)
 
         # Title
-        title_label = QLabel("Faculty Attendance \nManagement System ")
+        title_label = QLabel("Faculty Attendance \nManagement System")
         title_label.setStyleSheet(f"""
             color: {TEXT_COLOR};
             font-size: 24px;
@@ -315,47 +314,46 @@ class StartPage(QWidget):
 
         # Buttons Container
         buttons_widget = QWidget()
-        buttons_widget.setStyleSheet(f"""
-            QWidget {{
-                border: none;
-            }}
-            QFrame {{
-                border: none;
-            }}
-        """)
+        buttons_widget.setStyleSheet("border: none;")
         buttons_layout = QVBoxLayout(buttons_widget)
         buttons_layout.setSpacing(15)
-
+        
+        # First row - 3 buttons side by side
+        first_row = QHBoxLayout()
+        first_row.setSpacing(10)  # Set horizontal spacing between buttons
+        
         # Reference File Preparer Button
         self.reference_btn = QPushButton("Prepare Reference File")
         self.reference_btn.setMinimumHeight(50)
         self.reference_btn.setStyleSheet(MENU_BUTTON_STYLE)
-        buttons_layout.addWidget(self.reference_btn)
-
+        first_row.addWidget(self.reference_btn)
+        
         # Prepare Log Sheet Button
         self.preparer_btn = QPushButton("Prepare Log Sheet")
         self.preparer_btn.setMinimumHeight(50)
         self.preparer_btn.setStyleSheet(MENU_BUTTON_STYLE)
-        buttons_layout.addWidget(self.preparer_btn)
-
+        first_row.addWidget(self.preparer_btn)
+        
         # Schedule Manager Button
         self.schedule_btn = QPushButton("Manage Schedules")
         self.schedule_btn.setMinimumHeight(50)
         self.schedule_btn.setStyleSheet(MENU_BUTTON_STYLE)
-        buttons_layout.addWidget(self.schedule_btn)
-
-        # Process Button
+        first_row.addWidget(self.schedule_btn)
+        
+        buttons_layout.addLayout(first_row)
+        
+        # Second row - Process button (full width)
         self.process_btn = QPushButton("Process Attendance")
         self.process_btn.setMinimumHeight(50)
         self.process_btn.setStyleSheet(MENU_BUTTON_STYLE)
         buttons_layout.addWidget(self.process_btn)
-
-        # Dashboard Button
+        
+        # Third row - Dashboard button (full width)
         self.dashboard_btn = QPushButton("Analyze Attendance")
         self.dashboard_btn.setMinimumHeight(50)
         self.dashboard_btn.setStyleSheet(MENU_BUTTON_STYLE)
         buttons_layout.addWidget(self.dashboard_btn)
-
+        
         # Exit Button
         exit_btn = QPushButton("Exit")
         exit_btn.setMinimumHeight(50)
@@ -365,11 +363,10 @@ class StartPage(QWidget):
 
         # Add buttons container to card
         card_layout.addWidget(buttons_widget)
-        card_layout.addStretch()
 
         # Set fixed size for the card
-        card_container.setFixedWidth(600)
-        card_container.setMinimumHeight(400)
+        card_container.setFixedWidth(700)  # Slightly wider to accommodate 3 buttons side by side
+        card_container.setMinimumHeight(600)  # Taller to accommodate the new layout
 
 # ==========================================================info page==========================================================#
 
@@ -475,118 +472,172 @@ class InfoPage(QWidget):
 
         # Create info label with rich text
         info_text = """
-        <h1 style='color: white; text-align: center;'>Department Attendance Management System</h1>
-        <p style='color: white;'>Effortlessly track and analyze student attendance with this user-friendly tool.</p>
+        <h1 style='color: white; text-align: center;'>Faculty Attendance Management System</h1>
         
-        <h2 style='color: white;'>System Requirements</h2>
+        <h2 style='color: white;'>Special Thanks</h2>
         <ul style='color: white;'>
-            <li>Operating System: Windows</li>
-            <li>Software: Microsoft Excel (for viewing and editing reports)</li>
+            <li><b>Dr. Ahmad Samir</b> who encouraged me to start working on this project</li>
+            <li><b>Dr. Amani Helmi</b> who sponsored this project till it was launched successfully</li>
+            <li><b>Dr. Gehan</b> who supported me every step on the way</li>
+            <li><b>Dr. Doaa Abu Bakr</b> who was the catalyst to this project's success</li>
+            <li><b>Dr. Taqwa</b> who aided me with her efforts in implementing the project</li>
+            <li>My companion and friend, <b>Dr. Mazin Helmi</b> who never got tired of me</li>
+
         </ul>
+                
+        <h2 style='color: white;'>What This App Does</h2>
+        <p style='color: white;'>This app is a simple tool to track and manage student attendance. It helps you manage faculty attendance easily. It tracks who attended classes and creates reports.</p>
         
-        <h2 style='color: white;'>Key Features</h2>
+        <h2 style='color: white;'>Main Features</h2>
         <ol style='color: white;'>
-            <li><b>Prepare Log Sheets</b>
+            <li><b>Prepare Reference File</b>
                 <ul>
-                    <li>Merge attendance logs from cloud storage or your computer into a single file.</li>
+                    <li>Create a file with all student information</li>
+                    <li>Organize students by ID, name, year, and group</li>
+                </ul>
+            </li>
+            <li><b>Prepare Log Sheet</b>
+                <ul>
+                    <li>Combine attendance records from multiple sources</li>
+                    <li>Get files from your computer or cloud storage</li>
+                </ul>
+            </li>
+            <li><b>Manage Schedules</b>
+                <ul>
+                    <li>Create new class schedules</li>
+                    <li>Update existing schedules when needed</li>
                 </ul>
             </li>
             <li><b>Process Attendance</b>
                 <ul>
-                    <li>Validate attendance logs against scheduled sessions and generate comprehensive reports.</li>
+                    <li>Compare student logs against official schedules</li>
+                    <li>Generate detailed attendance reports</li>
                 </ul>
             </li>
-            <li><b>Populate Main File</b>
+            <li><b>Analyze Attendance</b>
                 <ul>
-                    <li>Automatically update your department's main attendance records.</li>
-                </ul>
-            </li>
-            <li><b>Analyze Data</b>
-                <ul>
-                    <li>View statistics, track individual student records, and explore attendance trends.</li>
+                    <li>See attendance statistics and trends</li>
+                    <li>Identify students who need help or attention</li>
                 </ul>
             </li>
         </ol>
         
-        <h2 style='color: white;'>Quick Start Guide</h2>
-        <h3 style='color: white;'>1. Preparing Log Sheets</h3>
-        <p style='color: white;'><b>From Cloud Storage:</b></p>
-        <ul style='color: white;'>
-            <li>Open the app</li>
-            <li>Navigate to Log Sheet Preparer</li>
-            <li>Click Download Excel Files from Cloud Storage</li>
-            <li>Then, click Merge Logs Files</li>
-        </ul>
-        <p style='color: white;'><b>From Your Computer:</b></p>
-        <ul style='color: white;'>
-            <li>Select Import Local Files</li>
-            <li>Click Browse</li>
-            <li>Choose Merge Logs Files</li>
-        </ul>
-        <p style='color: white;'><b>Output Location:</b> <code>Merged Files</code> folder</p>
+        <h2 style='color: white;'>How To Use This App</h2>
         
-        <h3 style='color: white;'>2. Processing Attendance</h3>
-        <p style='color: white;'><b>Set Up Data:</b></p>
+        <h3 style='color: white;'>Step 1: Prepare Reference File</h3>
         <ul style='color: white;'>
-            <li>Load:
+            <li>Click "Prepare Reference File" button on the main screen</li>
+            <li>Click "Browse" to select your Excel file with student information</li>
+            <li>Choose which columns have student ID, name, year, and group</li>
+            <li>Click "Preview Result" to check the data</li>
+            <li>Click "Process and Save Reference File" when everything looks right</li>
+        </ul>
+        
+        <h3 style='color: white;'>Step 2: Prepare Log Sheet</h3>
+        <ul style='color: white;'>
+            <li>Click "Prepare Log Sheet" button on the main screen</li>
+            <li>Choose where to get your files from:
                 <ul>
-                    <li>Student Database (Excel file with Student ID, Name, Year, Group)</li>
-                    <li>Attendance Logs (Excel file with Student ID, Location, Date, Time)</li>
-                    <li>Session Schedule (Excel file with Year, Group, Session, Location, Date, Start Time)</li>
+                    <li>"Import from Cloud Storage" to download files from online</li>
+                    <li>"Import Local Files" to use files from your computer</li>
+                </ul>
+            </li>
+            <li>Select the files you want to combine</li>
+            <li>Click "Merge Logs Files" to join them into one file</li>
+        </ul>
+        
+        <h3 style='color: white;'>Step 3: Manage Schedules</h3>
+        <ul style='color: white;'>
+            <li>Click "Manage Schedules" button on the main screen</li>
+            <li>To create a new schedule:
+                <ul>
+                    <li>Enter the module name</li>
+                    <li>Select year, group, subject, and location</li>
+                    <li>Pick the date and time using the calendar</li>
+                    <li>Click "Add Session" for each class meeting</li>
+                    <li>Click "Create Schedule" when you're done</li>
+                </ul>
+            </li>
+            <li>To update an existing schedule:
+                <ul>
+                    <li>Select "Update Existing" option</li>
+                    <li>Click "Browse" to find your schedule file</li>
+                    <li>Make changes to existing sessions or add new ones</li>
+                    <li>Click "Update Schedule" to save changes</li>
                 </ul>
             </li>
         </ul>
-        <p style='color: white;'><b>Process:</b></p>
-        <ul style='color: white;'>
-            <li>Click Process Attendance Records</li>
-        </ul>
-        <p style='color: white;'><b>Output Location:</b> <code>attendance_reports</code> folder</p>
-        <p style='color: white;'>Includes detailed session reports and summary sheets.</p>
         
-        <h3 style='color: white;'>3. Updating the Main Attendance File</h3>
-        <ol style='color: white;'>
-            <li>Select:
+        <h3 style='color: white;'>Step 4: Process Attendance</h3>
+        <ul style='color: white;'>
+            <li>Click "Process Attendance" button on the main screen</li>
+            <li>Set up your data:
                 <ul>
-                    <li>Your department's attendance file</li>
-                    <li>Faculty's main attendance file</li>
+                    <li>Select your reference file (student database)</li>
+                    <li>Select your attendance logs</li>
+                    <li>Add all relevant schedule files</li>
                 </ul>
             </li>
-            <li>Click Populate Main Attendance File</li>
-        </ol>
-        <p style='color: white;'><b>Output:</b></p>
-        <ul style='color: white;'>
-            <li>Main file updated automatically</li>
-            <li>Backups created for safety</li>
+            <li>Click "Process Attendance Records" to start</li>
+            <li>Wait for the system to finish processing</li>
+            <li>Find your reports in the "attendance_reports" folder</li>
         </ul>
         
-        <h3 style='color: white;'>4. Analyzing Data</h3>
+        <h3 style='color: white;'>Step 5: Analyze Attendance</h3>
         <ul style='color: white;'>
-            <li>Open the Analysis Dashboard</li>
-            <li>Load your attendance report</li>
-        </ul>
-        <p style='color: white;'><b>View:</b></p>
-        <ul style='color: white;'>
-            <li>Key Stats: Total students, sessions held, average attendance</li>
-            <li>Group & Session Breakdowns</li>
-            <li>Individual Student Records: Search by Name or Student ID</li>
+            <li>Click "Analyze Attendance" button on the main screen</li>
+            <li>Select your processed attendance report file from the previous step</li>
+            <li>Click "Display Statistics" to see:
+                <ul>
+                    <li>Total number of students</li>
+                    <li>Pass rate and average attendance</li>
+                    <li>Number of at-risk students</li>
+                    <li>Detailed information for each student</li>
+                </ul>
+            </li>
+            <li>Use the search box to find specific students by name or ID</li>
         </ul>
         
-        <h2 style='color: white;'>Generated Reports</h2>
-        <p style='color: white;'><b>Attendance Report Format:</b><br><code>Y{year}_{module}_attendance.xlsx</code></p>
-        <p style='color: white;'><b>Includes:</b></p>
+        <h2 style='color: white;'>Tips for Best Results</h2>
         <ul style='color: white;'>
-            <li>Attendance Sheet: Validated session attendance per student</li>
-            <li>Summary Sheet: Statistics for each student and session</li>
+            <li>Keep your files organized in dedicated folders</li>
+            <li>Process attendance weekly to stay up-to-date</li>
+            <li>Use consistent naming for all your files</li>
+        </ul>
+        
+        <h2 style='color: white;'>Troubleshooting</h2>
+        <ul style='color: white;'>
+            <li>If files won't import:
+                <ul>
+                    <li>Check that they are Excel (.xlsx) format</li>
+                    <li>Make sure required columns are present</li>
+                    <li>Verify you have permission to read/write these files</li>
+                </ul>
+            </li>
+            <li>If data doesn't match:
+                <ul>
+                    <li>Check that student IDs are consistent across files</li>
+                    <li>Look for typos in names or IDs</li>
+                    <li>Make sure date formats are the same in all files</li>
+                </ul>
+            </li>
+            <li>If the app crashes:
+                <ul>
+                    <li>Restart the application</li>
+                    <li>Check that you have enough disk space</li>
+                    <li>Make sure all required files are available</li>
+                </ul>
+            </li>
         </ul>
         
         <h2 style='color: white;'>Need Help?</h2>
         <p style='color: white;'><b>Developer Note:</b><br>
-        This application was developed by a medical student at the Faculty of Medicine, Ain Shams University, as part of a project to integrate tech-based solutions into the university's educational processes.</p>
+        This application was developed by a medical student at the Faculty of Medicine, Ain Shams University with the help of AI models including Claude, DeepSeek, Perplexity, and a little bit of ChatGPT.</p>
         <p style='color: white;'><b>Contact Information:</b></p>
         <ul style='color: white;'>
-            <li><a href='mailto:231249@med.asu.edu.eg' style='color: #4b96ff;'>Primary Contact</a></li>
-            <li><a href='mailto:mohammadhamdisaid.mh@icloud.com' style='color: #4b96ff;'>Alternative 1</a></li>
-            <li><a href='mailto:mohammad_hamdi11@yahoo.com' style='color: #4b96ff;'>Alternative 2</a></li>
+            <li>  231249@med.asu.edu.eg</li>
+            <li>  mohammadhamdisaid.mh@icloud.com</li>
+            <li>  mohammad_hamdi11@yahoo.com</li>
         </ul>
         """
 
@@ -1128,8 +1179,17 @@ class ReferenceFilePreparer(QWidget):
                 # If running as script
                 app_dir = os.path.dirname(os.path.abspath(__file__))
             
-            # Set output file in the app directory
-            output_file = os.path.join(app_dir, "reference_data.xlsx")
+            # Create a reference_data folder if it doesn't exist
+            reference_data_dir = os.path.join(app_dir, "reference_data")
+            if not os.path.exists(reference_data_dir):
+                os.makedirs(reference_data_dir)
+            
+            # Create filename with timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            output_filename = f"reference_data_{timestamp}.xlsx"
+            
+            # Set output file in the reference_data directory
+            output_file = os.path.join(reference_data_dir, output_filename)
             
             # Create a new workbook
             wb = openpyxl.Workbook()
@@ -1157,7 +1217,7 @@ class ReferenceFilePreparer(QWidget):
             # Save the workbook
             wb.save(output_file)
             
-            self.show_success_message(f"Reference file created successfully!\nSaved as: {output_file}")
+            self.show_success_message(f"Reference file created successfully!\nSaved in the 'reference_data' folder as:\n{output_filename}")
             
         except Exception as e:
             self.show_error_message(f"Error processing file: {str(e)}")
@@ -1279,9 +1339,17 @@ class GithubDownloadWorker(QThread):
                 self.log_signal.emit("No Excel files found in the repository")
                 return
 
-            # Create temp directory if it doesn't exist
-            temp_dir = os.path.join(os.path.dirname(
-                __file__), 'Imported_scan_logs')
+            # Create base directory and imported logs subdirectory
+            # Use a better approach for determining base directory that works with both script and exe
+            if getattr(sys, 'frozen', False):
+                # If the application is run as a bundle, the PyInstaller bootloader
+                # extends the sys module by a flag frozen=True and sets the app 
+                # path into variable sys._MEIPASS
+                base_dir = os.path.dirname(sys.executable)
+            else:
+                base_dir = os.path.dirname(os.path.abspath(__file__))
+            
+            temp_dir = os.path.join(base_dir, 'log_history', 'Imported_logs')
             os.makedirs(temp_dir, exist_ok=True)
 
             # Download each Excel file
@@ -1316,7 +1384,6 @@ class GithubDownloadWorker(QThread):
             self.log_signal.emit(f"Error: {str(e)}")
             import traceback
             self.log_signal.emit(traceback.format_exc())
-
 
 class MergeWorker(QThread):
     progress_signal = pyqtSignal(int)
@@ -1448,8 +1515,8 @@ class MergeWorker(QThread):
 
             # Add all remaining columns (excluding the ones we've already added and metadata)
             remaining_columns = [col for col in merged_df.columns
-                                 if col not in ordered_columns
-                                 and col not in ['Source_File', 'Source_Sheet']]
+                                if col not in ordered_columns
+                                and col not in ['Source_File', 'Source_Sheet']]
             ordered_columns.extend(remaining_columns)
 
             # Add metadata columns at the end
@@ -1461,6 +1528,9 @@ class MergeWorker(QThread):
 
             # Reorder the dataframe columns
             merged_df = merged_df[ordered_columns]
+
+            # Make sure the output directory exists
+            os.makedirs(os.path.dirname(self.output_file), exist_ok=True)
 
             # Save the merged data with reordered columns
             self.log_signal.emit(f"Saving merged data to {self.output_file}")
@@ -1474,7 +1544,6 @@ class MergeWorker(QThread):
             self.log_signal.emit(f"Error during merge: {str(e)}")
             import traceback
             self.log_signal.emit(traceback.format_exc())
-
 
 class LogSheetPreparer(QWidget):
     def __init__(self):
@@ -1781,10 +1850,19 @@ class LogSheetPreparer(QWidget):
 
         # Generate output filename with timestamp
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        output_filename = f"prepared_log_history_{timestamp}.xlsx"
+        output_filename = f"log_history_{timestamp}.xlsx"
 
-        # Create 'Output' directory if it doesn't exist
-        output_dir = os.path.join(os.path.dirname(__file__), 'Merged Files')
+        # Create base directory and merged files subdirectory
+        # Use a better approach for determining base directory that works with both script and exe
+        if getattr(sys, 'frozen', False):
+            # If the application is run as a bundle, the PyInstaller bootloader
+            # extends the sys module by a flag frozen=True and sets the app 
+            # path into variable sys._MEIPASS
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        output_dir = os.path.join(base_dir, 'log_history', 'Merged_Files')
         os.makedirs(output_dir, exist_ok=True)
 
         # Full path for output file
@@ -1992,6 +2070,14 @@ class ScheduleManager(QWidget):
         add_sessions_group = QGroupBox("Add New Sessions")
         add_sessions_group.setStyleSheet(GROUP_BOX_STYLE)
         add_sessions_layout = QVBoxLayout(add_sessions_group)  # Use vertical layout as container
+        
+        # MODULE NAME INPUT - Add this new section
+        module_name_layout = QHBoxLayout()
+        module_name_layout.addWidget(QLabel("Module Name:"))
+        self.module_name_input = QLineEdit()
+        self.module_name_input.setPlaceholderText("Enter module name...")
+        module_name_layout.addWidget(self.module_name_input)
+        add_sessions_layout.addLayout(module_name_layout)
         
         # Create horizontal layout for the form fields
         form_layout = QHBoxLayout()
@@ -2207,6 +2293,13 @@ class ScheduleManager(QWidget):
         file_group = QGroupBox("Select Schedule to Update")
         file_group.setStyleSheet(GROUP_BOX_STYLE)
         file_layout = QHBoxLayout(file_group)
+        
+        # MODULE NAME INPUT - Add this new section
+        module_name_layout = QHBoxLayout()
+        module_name_layout.addWidget(QLabel("Module Name:"))
+        self.update_module_name_input = QLineEdit()
+        self.update_module_name_input.setPlaceholderText("Enter module name...")
+        file_layout.addWidget(self.update_module_name_input)
         
         self.update_file_input = QLineEdit()
         self.update_file_input.setPlaceholderText("Select Excel schedule file...")
@@ -2746,24 +2839,40 @@ class ScheduleManager(QWidget):
         if not file_path:
             self.show_message_box("Error", "Please select a file first")
             return
-
+        
         try:
             # Clear existing data
             self.existing_table.setRowCount(0)
-
+            
             # Load Excel file
             wb = openpyxl.load_workbook(file_path)
             sheet = wb.active
-
+            
+            # Try to get module name from sheet title
+            module_name = sheet.title
+            if module_name and module_name != "Sheet":  # If it's not the default sheet name
+                self.update_module_name_input.setText(module_name)
+            
+            # Check if the first row contains "Module:" (old format) or headers (new format)
+            first_cell = sheet.cell(row=1, column=1).value
+            if first_cell and isinstance(first_cell, str) and first_cell.startswith("Module:"):
+                # Old format with module name in first row
+                module_name = first_cell.replace("Module:", "").strip()
+                self.update_module_name_input.setText(module_name)
+                start_row = 3  # Start reading data from row 3
+            else:
+                # New format with headers in first row
+                start_row = 2  # Start reading data from row 2
+            
             # Skip header row
             row_count = 0
-            for row in sheet.iter_rows(min_row=2, values_only=True):
+            for row in sheet.iter_rows(min_row=start_row, values_only=True):
                 if all(cell is None for cell in row):
                     continue  # Skip empty rows
-
+                
                 # Add row to table
                 self.existing_table.insertRow(row_count)
-
+                
                 # Set data in table
                 # Only use the first 7 columns
                 for col, cell_value in enumerate(row[:7]):
@@ -2771,112 +2880,126 @@ class ScheduleManager(QWidget):
                     item = QTableWidgetItem(value)
                     item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                     self.existing_table.setItem(row_count, col, item)
-
+                
                 row_count += 1
-
+            
         except Exception as e:
-            self.show_message_box(
-                "Error", f"Failed to load schedule: {str(e)}")
-
+            self.show_message_box("Error", f"Failed to load schedule: {str(e)}")
+    
     def save_schedule(self):
-        """Save the created schedule to Excel file"""
+        """Save the created schedule to Excel file directly without prompting"""
         if len(self.schedule_data) == 0:
             self.show_message_box("Error", "No schedule data to save")
             return
-
+    
+        # Get module name (default if empty)
+        module_name = self.module_name_input.text().strip()
+        if not module_name:
+            module_name = "Untitled_Module"
+    
         try:
-            # Ask for save location
-            filename, _ = QFileDialog.getSaveFileName(
-                self, "Save Schedule", "", "Excel Files (*.xlsx)")
-
-            if not filename:
-                return  # User cancelled
-
-            # Add .xlsx extension if missing
-            if not filename.lower().endswith('.xlsx'):
-                filename += '.xlsx'
-
+            # Create modules_schedules directory in the current working directory
+            # This will be where the EXE is running from
+            save_dir = os.path.join(os.getcwd(), "modules_schedules")
+            os.makedirs(save_dir, exist_ok=True)
+    
+            # Generate timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+            # Create filename with module name and timestamp
+            filename = f"{module_name}_{timestamp}.xlsx"
+            filepath = os.path.join(save_dir, filename)
+        
             # Create a new workbook
             wb = openpyxl.Workbook()
             ws = wb.active
-
-            # Add headers
-            headers = ['Year', 'Group', 'Subject',
-                       'Session', 'Location', 'Date', 'Start Time']
+        
+            # Name the worksheet with the module name (limit to 31 chars as Excel has a limit)
+            ws.title = module_name[:31]
+        
+            # Add headers in row 1 (no module name row anymore)
+            headers = ['Year', 'Group', 'Subject', 'Session', 'Location', 'Date', 'Start Time']
             for col, header in enumerate(headers, start=1):
                 ws.cell(row=1, column=col).value = header
                 ws.cell(row=1, column=col).font = openpyxl.styles.Font(bold=True)
-
+        
             # Sort data by Year, Group, and then Session number
             sorted_data = sorted(self.schedule_data,
                                  key=lambda x: (x[0], x[1], int(x[3])))
-
-            # Add data
+        
+            # Add data starting from row 2 (was row 3 before)
             for row_idx, row_data in enumerate(sorted_data, start=2):
                 for col_idx, cell_value in enumerate(row_data, start=1):
                     ws.cell(row=row_idx, column=col_idx).value = cell_value
-
-            # Auto-fit columns
-            for col in ws.columns:
+        
+            # Auto-fit columns - modified to use all rows including header
+            for col in range(1, 8):  # Columns A through G
                 max_length = 0
-                column = col[0].column_letter
-                for cell in col:
+                column_letter = openpyxl.utils.get_column_letter(col)
+            
+                # Include all rows
+                for row in range(1, ws.max_row + 1):
+                    cell = ws.cell(row=row, column=col)
                     try:
-                        if len(str(cell.value)) > max_length:
+                        if cell.value and len(str(cell.value)) > max_length:
                             max_length = len(str(cell.value))
                     except:
                         pass
+            
                 adjusted_width = (max_length + 2)
-                ws.column_dimensions[column].width = adjusted_width
-
+                ws.column_dimensions[column_letter].width = adjusted_width
+        
             # Save the file
-            wb.save(filename)
-
-            self.show_message_box("Success", "Schedule saved successfully")
-
+            wb.save(filepath)
+        
+            self.show_message_box("Success", f"Schedule saved successfully to:\n{filepath}")
+        
         except Exception as e:
-            self.show_message_box(
-                "Error", f"Failed to save schedule: {str(e)}")
-
+            self.show_message_box("Error", f"Failed to save schedule: {str(e)}")
+    
     def update_schedule(self):
-        """Update the existing schedule with new sessions"""
+        """Update the existing schedule with new sessions without prompting for save location"""
         # Check if we have loaded an existing schedule
         if self.existing_table.rowCount() == 0:
-            self.show_message_box(
-                "Error", "Please load an existing schedule first")
+            self.show_message_box("Error", "Please load an existing schedule first")
             return
-
+    
         # Check if we have new sessions to add
         if self.new_sessions_table.rowCount() == 0:
             self.show_message_box("Error", "No new sessions to add")
             return
-
+    
+        # Get module name (default if empty)
+        module_name = self.update_module_name_input.text().strip()
+        if not module_name:
+            module_name = "Untitled_Module"
+    
         try:
-            # Get original filename
-            original_file = self.update_file_input.text()
-
-            # Ask for save location
-            filename, _ = QFileDialog.getSaveFileName(
-                self, "Save Updated Schedule", "", "Excel Files (*.xlsx)")
-
-            if not filename:
-                return  # User cancelled
-
-            # Add .xlsx extension if missing
-            if not filename.lower().endswith('.xlsx'):
-                filename += '.xlsx'
-
+            # Create modules_schedules directory in the current working directory
+            # This will be where the EXE is running from
+            save_dir = os.path.join(os.getcwd(), "modules_schedules")
+            os.makedirs(save_dir, exist_ok=True)
+        
+            # Generate timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+            # Create filename with module name and timestamp
+            filename = f"{module_name}_updated_{timestamp}.xlsx"
+            filepath = os.path.join(save_dir, filename)
+        
             # Create a new workbook
             wb = openpyxl.Workbook()
             ws = wb.active
-
-            # Add headers
-            headers = ['Year', 'Group', 'Subject',
-                       'Session', 'Location', 'Date', 'Start Time']
+        
+            # Name the worksheet with the module name (limit to 31 chars as Excel has a limit)
+            ws.title = module_name[:31]
+        
+            # Add headers in row 1 (no module name row anymore)
+            headers = ['Year', 'Group', 'Subject', 'Session', 'Location', 'Date', 'Start Time']
             for col, header in enumerate(headers, start=1):
                 ws.cell(row=1, column=col).value = header
                 ws.cell(row=1, column=col).font = openpyxl.styles.Font(bold=True)
-
+        
             # Collect existing data
             existing_data = []
             for row in range(self.existing_table.rowCount()):
@@ -2885,7 +3008,7 @@ class ScheduleManager(QWidget):
                     value = self.existing_table.item(row, col).text()
                     row_data.append(value)
                 existing_data.append(row_data)
-
+        
             # Collect new data
             new_data = []
             for row in range(self.new_sessions_table.rowCount()):
@@ -2894,61 +3017,64 @@ class ScheduleManager(QWidget):
                     value = self.new_sessions_table.item(row, col).text()
                     row_data.append(value)
                 new_data.append(row_data)
-
+        
             # Combine data - group by Year and Group
             grouped_data = {}
-
+        
             # Process existing data
             for row in existing_data:
                 key = (row[0], row[1])  # (Year, Group)
                 if key not in grouped_data:
                     grouped_data[key] = []
                 grouped_data[key].append(row)
-
+        
             # Add new data to appropriate groups
             for row in new_data:
                 key = (row[0], row[1])  # (Year, Group)
                 if key not in grouped_data:
                     grouped_data[key] = []
                 grouped_data[key].append(row)
-
+        
             # Sort groups by year and group name
             sorted_keys = sorted(grouped_data.keys())
-
+        
             # Prepare final data - sort each group by session number
             final_data = []
             for key in sorted_keys:
                 # Sort by session number within each group
                 group_data = sorted(grouped_data[key], key=lambda x: int(x[3]))
                 final_data.extend(group_data)
-
-            # Add data to worksheet
+        
+            # Add data to worksheet starting from row 2 (was row 3 before)
             for row_idx, row_data in enumerate(final_data, start=2):
                 for col_idx, cell_value in enumerate(row_data, start=1):
                     ws.cell(row=row_idx, column=col_idx).value = cell_value
-
-            # Auto-fit columns
-            for col in ws.columns:
+        
+            # Auto-fit columns - include all rows
+            for col in range(1, 8):  # Columns A through G
                 max_length = 0
-                column = col[0].column_letter
-                for cell in col:
+                column_letter = openpyxl.utils.get_column_letter(col)
+            
+                # Include all rows
+                for row in range(1, ws.max_row + 1):
+                    cell = ws.cell(row=row, column=col)
                     try:
-                        if len(str(cell.value)) > max_length:
+                        if cell.value and len(str(cell.value)) > max_length:
                             max_length = len(str(cell.value))
                     except:
                         pass
+            
                 adjusted_width = (max_length + 2)
-                ws.column_dimensions[column].width = adjusted_width
-
+                ws.column_dimensions[column_letter].width = adjusted_width
+        
             # Save the file
-            wb.save(filename)
-
-            self.show_message_box("Success", "Schedule updated successfully")
-
+            wb.save(filepath)
+        
+            self.show_message_box("Success", f"Schedule updated successfully to:\n{filepath}")
+        
         except Exception as e:
-            self.show_message_box(
-                "Error", f"Failed to update schedule: {str(e)}")
-
+            self.show_message_box("Error", f"Failed to update schedule: {str(e)}")
+            
     def show_message_box(self, title, message):
         """Show a message box with the given title and message"""
         msg_box = QMessageBox()
@@ -3620,19 +3746,21 @@ class ProcessThread(QThread):
                 output_wb = openpyxl.Workbook()
                 output_wb.remove(output_wb.active)
 
-                self.create_valid_logs_sheet(
-                    output_wb, 'Attendance', valid_attendance)
+                # Create Summary sheet first, then Attendance sheet
                 self.create_summary_sheet(output_wb, 'Summary', valid_attendance, required_attendance,
                                           student_map, f"Year {year}", completed_sessions, total_required)
+                self.create_valid_logs_sheet(output_wb, 'Attendance', valid_attendance)
+
                 current_step += 1
                 self.progress_updated.emit(
                     int(current_step / total_steps * 100))
 
                 # Save output workbook
+                current_timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
                 year_dir = os.path.join(output_dir, f"Year_{year}")
                 os.makedirs(year_dir, exist_ok=True)
                 output_path = os.path.join(
-                    year_dir, f"Y{year}_{module}_attendance.xlsx")
+                    year_dir, f"Y{year}_{module}_attendance_{current_timestamp}.xlsx")
                 output_wb.save(output_path)
                 current_step += 1
                 self.progress_updated.emit(
@@ -3792,7 +3920,7 @@ class ProcessThread(QThread):
             sheet.row_dimensions[1].height = 22
 
         # Add freeze panes to keep header visible when scrolling
-        sheet.freeze_panes = 'A2'
+        sheet.freeze_panes = 'C2'
 
         row_num = 2  # Start from row 2 (after header)
         for key in data:
@@ -3806,12 +3934,27 @@ class ProcessThread(QThread):
                 if isinstance(cell.value, (datetime, date)):
                     cell.number_format = 'DD/MM/YYYY' if col == 'I' else 'HH:MM:SS'
 
-        # Auto-adjust column widths
-        for column in sheet.columns:
-            max_length = max(len(str(cell.value) if cell.value else '')
-                             for cell in column)
-            sheet.column_dimensions[openpyxl.utils.get_column_letter(
-                column[0].column)].width = max_length + 3
+        # Improved auto-fit column widths
+        for col_idx, column in enumerate(sheet.columns, 1):
+            # Get maximum length in the column
+            max_length = 0
+            for cell in column:
+                try:
+                    if cell.value:
+                        max_length = max(max_length, len(str(cell.value)))
+                except:
+                    pass
+        
+            # Set column width with minimum and maximum limits
+            if max_length > 0:
+                adjusted_width = min(max(max_length + 2, 12), 50)  # Min 12, Max 50
+            
+                # Special case for name column (typically column B)
+                if col_idx == 2:  # Name column
+                    adjusted_width = max(adjusted_width, 25)  # Names need more space
+            
+                # Apply the calculated width
+                sheet.column_dimensions[openpyxl.utils.get_column_letter(col_idx)].width = adjusted_width
 
         # Add auto-filter to easily sort and filter data
         sheet.auto_filter.ref = f"A1:{openpyxl.utils.get_column_letter(sheet.max_column)}{sheet.max_row}"
@@ -3870,8 +4013,8 @@ class ProcessThread(QThread):
             for session in sorted(subjects[subject]["sessions"]):
                 for location in sorted(subjects[subject]["locations"]):
                     header.extend([
-                        f"{subject} S{session} @ {location} (Req)",
-                        f"{subject} S{session} @ {location} (Att)"
+                        f"{subject} S{session} at {location} (Req)",
+                        f"{subject} S{session} at {location} (Att)"
                     ])
                     current_col += 2
 
@@ -3905,7 +4048,7 @@ class ProcessThread(QThread):
         sheet.row_dimensions[1].height = 40
 
         # Add freeze panes to keep headers visible when scrolling
-        sheet.freeze_panes = 'A2'
+        sheet.freeze_panes = 'C2'
 
         # Define status colors
         COLOR_PASS = "66E4A6"
@@ -4032,13 +4175,45 @@ class ProcessThread(QThread):
         # Add auto-filter to easily sort and filter data
         sheet.auto_filter.ref = f"A1:L{sheet.max_row}"
 
-        # Adjust column widths
-        for column in sheet.columns:
-            max_length = max(len(str(cell.value) if cell.value else '')
-                             for cell in column)
-            adjusted_width = min(max_length + 2, 50)
-            sheet.column_dimensions[openpyxl.utils.get_column_letter(
-                column[0].column)].width = adjusted_width
+        # Improved column width auto-fitting
+        column_widths = {}
+    
+        # First pass: Calculate max content length for each column
+        for row in sheet.iter_rows():
+            for cell in row:
+                col_letter = openpyxl.utils.get_column_letter(cell.column)
+                if cell.value:
+                    # For headers (row 1), calculate based on word-wrapped text
+                    if cell.row == 1:
+                        # Split header by spaces and find the longest word
+                        words = str(cell.value).split()
+                        if words:
+                            max_word_len = max(len(word) for word in words)
+                            # For headers, consider both total length and longest word
+                            header_width = min(max(max_word_len + 1, len(str(cell.value)) / 2), 30)
+                            column_widths[col_letter] = max(column_widths.get(col_letter, 0), header_width)
+                    else:
+                        # For data cells, use the full text length
+                        try:
+                            text_len = len(str(cell.value))
+                            column_widths[col_letter] = max(column_widths.get(col_letter, 0), text_len + 1)
+                        except:
+                            pass
+    
+        # Second pass: Apply calculated widths with constraints
+        for col_letter, width in column_widths.items():
+            col_idx = openpyxl.utils.column_index_from_string(col_letter)
+        
+            # Base width calculation
+            adjusted_width = min(max(width, 10), 40)  # Min 10, Max 40
+        
+            # Special case for specific columns
+            if col_idx == 2:  # Name column
+                adjusted_width = max(adjusted_width, 25)  # Names need more space
+            elif col_idx >= 13:  # Subject specific columns
+                adjusted_width = max(adjusted_width, 12)  # Subject columns need at least this width
+            
+            sheet.column_dimensions[col_letter].width = adjusted_width
 
     def lighten_color(self, hex_color, factor=0.75):
         """
@@ -4059,7 +4234,6 @@ class ProcessThread(QThread):
         return f"{r:02x}{g:02x}{b:02x}".upper()
 
 # ==========================================================attendance analyzer==========================================================#
-
 
 class AttendanceDashboard(QWidget):
     def __init__(self):
