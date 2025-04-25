@@ -191,13 +191,13 @@ QTextEdit {{
 """
 
 #==========================================================start page==========================================================#
+
 class StartPage(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.init_ui()
         
     def init_ui(self):
-        
         # Main layout
         main_layout = QVBoxLayout(self)
         main_layout.setSpacing(0)
@@ -303,7 +303,7 @@ class StartPage(QWidget):
         card_layout.addWidget(logo_label)
 
         # Title
-        title_label = QLabel("Department Attendance \nManagement System ")
+        title_label = QLabel("Department Attendance \nManagement System")
         title_label.setStyleSheet(f"""
             color: {TEXT_COLOR};
             font-size: 24px;
@@ -314,53 +314,58 @@ class StartPage(QWidget):
 
         # Buttons Container
         buttons_widget = QWidget()
-        buttons_widget.setStyleSheet(f"""
-            QWidget {{
-                border: none;
-            }}
-            QFrame {{
-                border: none;
-            }}
-        """)
+        buttons_widget.setStyleSheet("border: none;")
         buttons_layout = QVBoxLayout(buttons_widget)
         buttons_layout.setSpacing(15)
-
+        
+        # First row - 3 buttons side by side
+        first_row = QHBoxLayout()
+        first_row.setSpacing(10)  # Set horizontal spacing between buttons
+        
         # Reference File Preparer Button
         self.reference_btn = QPushButton("Prepare Reference File")
         self.reference_btn.setMinimumHeight(50)
         self.reference_btn.setStyleSheet(MENU_BUTTON_STYLE)
-        buttons_layout.addWidget(self.reference_btn)
-
+        first_row.addWidget(self.reference_btn)
+        
         # Prepare Log Sheet Button
         self.preparer_btn = QPushButton("Prepare Log Sheet")
         self.preparer_btn.setMinimumHeight(50)
         self.preparer_btn.setStyleSheet(MENU_BUTTON_STYLE)
-        buttons_layout.addWidget(self.preparer_btn)
-
+        first_row.addWidget(self.preparer_btn)
+        
         # Schedule Manager Button
         self.schedule_btn = QPushButton("Manage Schedules")
         self.schedule_btn.setMinimumHeight(50)
         self.schedule_btn.setStyleSheet(MENU_BUTTON_STYLE)
-        buttons_layout.addWidget(self.schedule_btn)
-
+        first_row.addWidget(self.schedule_btn)
+        
+        buttons_layout.addLayout(first_row)
+        
+        # Second row - 2 buttons side by side
+        second_row = QHBoxLayout()
+        second_row.setSpacing(10)
+        
         # Process Button
         self.process_btn = QPushButton("Process Attendance")
         self.process_btn.setMinimumHeight(50)
         self.process_btn.setStyleSheet(MENU_BUTTON_STYLE)
-        buttons_layout.addWidget(self.process_btn)
-
+        second_row.addWidget(self.process_btn)
+        
         # Populate with Faculty Button
         self.populate_btn = QPushButton("Populate Main File")
         self.populate_btn.setMinimumHeight(50)
         self.populate_btn.setStyleSheet(MENU_BUTTON_STYLE)
-        buttons_layout.addWidget(self.populate_btn)
-
-        # Dashboard Button
+        second_row.addWidget(self.populate_btn)
+        
+        buttons_layout.addLayout(second_row)
+        
+        # Third row - Dashboard button (full width)
         self.dashboard_btn = QPushButton("Analyze Attendance")
         self.dashboard_btn.setMinimumHeight(50)
         self.dashboard_btn.setStyleSheet(MENU_BUTTON_STYLE)
         buttons_layout.addWidget(self.dashboard_btn)
-
+        
         # Exit Button
         exit_btn = QPushButton("Exit")
         exit_btn.setMinimumHeight(50)
@@ -370,13 +375,12 @@ class StartPage(QWidget):
 
         # Add buttons container to card
         card_layout.addWidget(buttons_widget)
-        card_layout.addStretch()
 
         # Set fixed size for the card
-        card_container.setFixedWidth(600)
-        card_container.setMinimumHeight(400)
+        card_container.setFixedWidth(700)  # Slightly wider to accommodate the buttons
+        card_container.setMinimumHeight(700)  # Taller to accommodate the extra button
 
-#==========================================================info page==========================================================#
+# ==========================================================info page==========================================================#
 
 class InfoPage(QWidget):
     def __init__(self):
@@ -388,7 +392,7 @@ class InfoPage(QWidget):
                 color: white;
             }
         """)
-        
+
         self.init_ui()
 
     def return_to_home(self):
@@ -408,8 +412,8 @@ class InfoPage(QWidget):
         logo_label = QLabel()
         logo_path = os.path.join(os.path.dirname(__file__), 'ASU1.png')
         if os.path.exists(logo_path):
-            pixmap = QPixmap(logo_path).scaled(60, 60, Qt.AspectRatioMode.KeepAspectRatio, 
-                                             Qt.TransformationMode.SmoothTransformation)
+            pixmap = QPixmap(logo_path).scaled(60, 60, Qt.AspectRatioMode.KeepAspectRatio,
+                                               Qt.TransformationMode.SmoothTransformation)
             logo_label.setPixmap(pixmap)
         title_label = QLabel("About the app")
         title_label.setStyleSheet(f"font-size: 24px; font-weight: bold;")
@@ -420,22 +424,22 @@ class InfoPage(QWidget):
         # Create vertical layout for header buttons
         header_buttons_layout = QVBoxLayout()
         header_buttons_layout.setSpacing(5)
-        
+
         # Back button
         back_btn = QPushButton("Back to Home")
         back_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
         back_btn.clicked.connect(self.return_to_home)
-        
+
         # Exit button
         exit_btn = QPushButton("Exit")
         exit_btn.setStyleSheet(EXIT_BUTTON_STYLE)
         exit_btn.clicked.connect(QApplication.instance().quit)
-        
+
         # Add buttons to vertical layout
         header_buttons_layout.addWidget(back_btn)
         header_buttons_layout.addWidget(exit_btn)
         header_buttons_layout.addStretch()
-        
+
         # Add button layout to header
         header_layout.addStretch()
         header_layout.addLayout(header_buttons_layout)
@@ -443,9 +447,10 @@ class InfoPage(QWidget):
 
         # Create a GroupBox for info content, similar to AttendanceProcessor style
         info_group = QGroupBox()
-        info_group.setStyleSheet(GROUP_BOX_STYLE)  # Using same style as other GroupBoxes
+        # Using same style as other GroupBoxes
+        info_group.setStyleSheet(GROUP_BOX_STYLE)
         info_layout = QVBoxLayout(info_group)
-        
+
         # Create scroll area for content
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
@@ -471,142 +476,244 @@ class InfoPage(QWidget):
                 background: none;
             }}
         """)
-        
+
         # Content widget for the scroll area
         info_content = QWidget()
         info_content.setStyleSheet("background-color: transparent;")
         content_layout = QVBoxLayout(info_content)
-        
+
         # Create info label with rich text
         info_text = """
         <h1 style='color: white; text-align: center;'>Department Attendance Management System</h1>
-        <p style='color: white;'>Effortlessly track and analyze student attendance with this user-friendly tool.</p>
         
-        <h2 style='color: white;'>System Requirements</h2>
+        <h2 style='color: white;'>Special Thanks</h2>
         <ul style='color: white;'>
-            <li>Operating System: Windows</li>
-            <li>Software: Microsoft Excel (for viewing and editing reports)</li>
+            <li><b>Dr. Ahmad Samir</b> who encouraged me to start working on this project</li>
+            <li><b>Dr. Amani Helmi</b> who sponsored this project till it was launched successfully</li>
+            <li><b>Dr. Gehan</b> who supported me every step on the way</li>
+            <li><b>Dr. Doaa Abu Bakr</b> who was the catalyst to this project's success</li>
+            <li><b>Dr. Taqwa</b> who aided me with her efforts in implementing the project</li>
+            <li>My companion and friend, <b>Dr. Mazin Helmi</b> who never got tired of me</li>
         </ul>
+                
+        <h2 style='color: white;'>What This App Does</h2>
+        <p style='color: white;'>This app is a simple tool to track and manage student attendance. It helps you manage faculty attendance easily. It tracks who attended classes and creates reports.</p>
         
-        <h2 style='color: white;'>Key Features</h2>
+        <h2 style='color: white;'>Main Features</h2>
         <ol style='color: white;'>
-            <li><b>Prepare Log Sheets</b>
+            <li><b>Prepare Reference File</b>
                 <ul>
-                    <li>Merge attendance logs from cloud storage or your computer into a single file.</li>
+                    <li>Create a file with all student information</li>
+                    <li>Organize students by ID, name, year, and group</li>
+                </ul>
+            </li>
+            <li><b>Prepare Log Sheet</b>
+                <ul>
+                    <li>Combine attendance records from multiple sources</li>
+                    <li>Get files from your computer or cloud storage</li>
+                </ul>
+            </li>
+            <li><b>Manage Schedules</b>
+                <ul>
+                    <li>Create new class schedules</li>
+                    <li>Update existing schedules when needed</li>
                 </ul>
             </li>
             <li><b>Process Attendance</b>
                 <ul>
-                    <li>Validate attendance logs against scheduled sessions and generate comprehensive reports.</li>
+                    <li>Compare student logs against official schedules</li>
+                    <li>Generate detailed attendance reports</li>
                 </ul>
             </li>
             <li><b>Populate Main File</b>
                 <ul>
-                    <li>Automatically update your department's main attendance records.</li>
+                    <li>Integrate department-specific attendance data into the main faculty attendance file</li>
+                    <li>Automatically match student IDs and session numbers</li>
+                    <li>Update attendance records for specific departments</li>
                 </ul>
             </li>
-            <li><b>Analyze Data</b>
+            <li><b>Analyze Attendance</b>
                 <ul>
-                    <li>View statistics, track individual student records, and explore attendance trends.</li>
+                    <li>See attendance statistics and trends</li>
+                    <li>Identify students who need help or attention</li>
                 </ul>
             </li>
         </ol>
         
-        <h2 style='color: white;'>Quick Start Guide</h2>
-        <h3 style='color: white;'>1. Preparing Log Sheets</h3>
-        <p style='color: white;'><b>From Cloud Storage:</b></p>
-        <ul style='color: white;'>
-            <li>Open the app</li>
-            <li>Navigate to Log Sheet Preparer</li>
-            <li>Click Download Excel Files from Cloud Storage</li>
-            <li>Then, click Merge Logs Files</li>
-        </ul>
-        <p style='color: white;'><b>From Your Computer:</b></p>
-        <ul style='color: white;'>
-            <li>Select Import Local Files</li>
-            <li>Click Browse</li>
-            <li>Choose Merge Logs Files</li>
-        </ul>
-        <p style='color: white;'><b>Output Location:</b> <code>Merged Files</code> folder</p>
+        <h2 style='color: white;'>How To Use This App</h2>
         
-        <h3 style='color: white;'>2. Processing Attendance</h3>
-        <p style='color: white;'><b>Set Up Data:</b></p>
+        <h3 style='color: white;'>Step 1: Prepare Reference File</h3>
         <ul style='color: white;'>
-            <li>Load:
+            <li>Click "Prepare Reference File" button on the main screen</li>
+            <li>Click "Browse" to select your Excel file with student information</li>
+            <li>Choose which columns have student ID, name, year, and group</li>
+            <li>Click "Preview Result" to check the data</li>
+            <li>Click "Process and Save Reference File" when everything looks right</li>
+        </ul>
+        
+        <h3 style='color: white;'>Step 2: Prepare Log Sheet</h3>
+        <ul style='color: white;'>
+            <li>Click "Prepare Log Sheet" button on the main screen</li>
+            <li>Choose where to get your files from:
                 <ul>
-                    <li>Student Database (Excel file with Student ID, Name, Year, Group)</li>
-                    <li>Attendance Logs (Excel file with Student ID, Location, Date, Time)</li>
-                    <li>Session Schedule (Excel file with Year, Group, Session, Location, Date, Start Time)</li>
+                    <li>"Import from Cloud Storage" to download files from online</li>
+                    <li>"Import Local Files" to use files from your computer</li>
+                </ul>
+            </li>
+            <li>Select the files you want to combine</li>
+            <li>Click "Merge Logs Files" to join them into one file</li>
+        </ul>
+        
+        <h3 style='color: white;'>Step 3: Manage Schedules</h3>
+        <ul style='color: white;'>
+            <li>Click "Manage Schedules" button on the main screen</li>
+            <li>To create a new schedule:
+                <ul>
+                    <li>Enter the module name</li>
+                    <li>Select year, group, subject, and location</li>
+                    <li>Pick the date and time using the calendar</li>
+                    <li>Click "Add Session" for each class meeting</li>
+                    <li>Click "Create Schedule" when you're done</li>
+                </ul>
+            </li>
+            <li>To update an existing schedule:
+                <ul>
+                    <li>Select "Update Existing" option</li>
+                    <li>Click "Browse" to find your schedule file</li>
+                    <li>Make changes to existing sessions or add new ones</li>
+                    <li>Click "Update Schedule" to save changes</li>
                 </ul>
             </li>
         </ul>
-        <p style='color: white;'><b>Process:</b></p>
-        <ul style='color: white;'>
-            <li>Click Process Attendance Records</li>
-        </ul>
-        <p style='color: white;'><b>Output Location:</b> <code>attendance_reports</code> folder</p>
-        <p style='color: white;'>Includes detailed session reports and summary sheets.</p>
         
-        <h3 style='color: white;'>3. Updating the Main Attendance File</h3>
-        <ol style='color: white;'>
-            <li>Select:
+        <h3 style='color: white;'>Step 4: Process Attendance</h3>
+        <ul style='color: white;'>
+            <li>Click "Process Attendance" button on the main screen</li>
+            <li>Set up your data:
                 <ul>
-                    <li>Your department's attendance file</li>
-                    <li>Faculty's main attendance file</li>
+                    <li>Select your reference file (student database)</li>
+                    <li>Select your attendance logs</li>
+                    <li>Add all relevant schedule files</li>
                 </ul>
             </li>
-            <li>Click Populate Main Attendance File</li>
-        </ol>
-        <p style='color: white;'><b>Output:</b></p>
-        <ul style='color: white;'>
-            <li>Main file updated automatically</li>
-            <li>Backups created for safety</li>
+            <li>Click "Process Attendance Records" to start</li>
+            <li>Wait for the system to finish processing</li>
+            <li>Find your reports in the "attendance_reports" folder</li>
         </ul>
         
-        <h3 style='color: white;'>4. Analyzing Data</h3>
+        <h3 style='color: white;'>Step 5: Populate Main File</h3>
         <ul style='color: white;'>
-            <li>Open the Analysis Dashboard</li>
-            <li>Load your attendance report</li>
-        </ul>
-        <p style='color: white;'><b>View:</b></p>
-        <ul style='color: white;'>
-            <li>Key Stats: Total students, sessions held, average attendance</li>
-            <li>Group & Session Breakdowns</li>
-            <li>Individual Student Records: Search by Name or Student ID</li>
+            <li>Click "Populate Main File" button on the main screen</li>
+            <li>Select your department:
+                <ul>
+                    <li>Choose from the dropdown menu (Anatomy, Histology, Physiology, etc.)</li>
+                </ul>
+            </li>
+            <li>Select your files:
+                <ul>
+                    <li>Browse to select the department attendance report file</li>
+                    <li>Browse to select the main faculty attendance file to be updated</li>
+                    <li>Select the appropriate sheet names if prompted</li>
+                </ul>
+            </li>
+            <li>Click "Populate Main Attendance File" to start the process</li>
+            <li>Wait for the system to:
+                <ul>
+                    <li>Automatically create a backup of your original file</li>
+                    <li>Match student IDs between the files</li>
+                    <li>Identify department-specific columns in the main file</li>
+                    <li>Update attendance records for each student and session</li>
+                </ul>
+            </li>
+            <li>Check the output console for progress updates and details</li>
+            <li>A success message will appear when the process is complete</li>
         </ul>
         
-        <h2 style='color: white;'>Generated Reports</h2>
-        <p style='color: white;'><b>Attendance Report Format:</b><br><code>Y{year}_{module}_attendance.xlsx</code></p>
-        <p style='color: white;'><b>Includes:</b></p>
+        <h3 style='color: white;'>Step 6: Analyze Attendance</h3>
         <ul style='color: white;'>
-            <li>Attendance Sheet: Validated session attendance per student</li>
-            <li>Summary Sheet: Statistics for each student and session</li>
+            <li>Click "Analyze Attendance" button on the main screen</li>
+            <li>Select your processed attendance report file from the previous step</li>
+            <li>Click "Display Statistics" to see:
+                <ul>
+                    <li>Total number of students</li>
+                    <li>Pass rate and average attendance</li>
+                    <li>Number of at-risk students</li>
+                    <li>Detailed information for each student</li>
+                </ul>
+            </li>
+            <li>Use the search box to find specific students by name or ID</li>
+        </ul>
+        
+        <h2 style='color: white;'>Tips for Best Results</h2>
+        <ul style='color: white;'>
+            <li>Keep your files organized in dedicated folders</li>
+            <li>Process attendance weekly to stay up-to-date</li>
+            <li>Use consistent naming for all your files</li>
+            <li>When using the Populate Main File feature:
+                <ul>
+                    <li>Make sure your department file has "Attendance" and "Summary" sheets</li>
+                    <li>Ensure student IDs are formatted consistently across files</li>
+                    <li>Department columns in the main file should include the department name and session number</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h2 style='color: white;'>Troubleshooting</h2>
+        <ul style='color: white;'>
+            <li>If files won't import:
+                <ul>
+                    <li>Check that they are Excel (.xlsx) format</li>
+                    <li>Make sure required columns are present</li>
+                    <li>Verify you have permission to read/write these files</li>
+                </ul>
+            </li>
+            <li>If data doesn't match:
+                <ul>
+                    <li>Check that student IDs are consistent across files</li>
+                    <li>Look for typos in names or IDs</li>
+                    <li>Make sure date formats are the same in all files</li>
+                </ul>
+            </li>
+            <li>If department columns are not detected during population:
+                <ul>
+                    <li>Verify the department name appears in column headers</li>
+                    <li>Make sure session numbers are included in the header</li>
+                    <li>Check the department patterns in the search settings</li>
+                </ul>
+            </li>
+            <li>If the app crashes:
+                <ul>
+                    <li>Restart the application</li>
+                    <li>Check that you have enough disk space</li>
+                    <li>Make sure all required files are available</li>
+                </ul>
+            </li>
         </ul>
         
         <h2 style='color: white;'>Need Help?</h2>
         <p style='color: white;'><b>Developer Note:</b><br>
-        This application was developed by a medical student at the Faculty of Medicine, Ain Shams University, as part of a project to integrate tech-based solutions into the university's educational processes.</p>
+        This application was developed by a medical student at the Faculty of Medicine, Ain Shams University with the help of AI models including Claude, DeepSeek, Perplexity, and a little bit of ChatGPT.</p>
         <p style='color: white;'><b>Contact Information:</b></p>
         <ul style='color: white;'>
-            <li><a href='mailto:231249@med.asu.edu.eg' style='color: #4b96ff;'>Primary Contact</a></li>
-            <li><a href='mailto:mohammadhamdisaid.mh@icloud.com' style='color: #4b96ff;'>Alternative 1</a></li>
-            <li><a href='mailto:mohammad_hamdi11@yahoo.com' style='color: #4b96ff;'>Alternative 2</a></li>
+            <li>  231249@med.asu.edu.eg</li>
+            <li>  mohammadhamdisaid.mh@icloud.com</li>
+            <li>  mohammad_hamdi11@yahoo.com</li>
         </ul>
         """
-        
+
         info_label = QLabel()
         info_label.setTextFormat(Qt.TextFormat.RichText)
         info_label.setText(info_text)
         info_label.setWordWrap(True)
         info_label.setStyleSheet("background-color: transparent;")
         content_layout.addWidget(info_label)
-        
+
         scroll_area.setWidget(info_content)
         info_layout.addWidget(scroll_area)
-        
+
         # Add the group box to the main layout
         main_layout.addWidget(info_group)
-        
+
         # Add a stretch after the group box to push everything up
         main_layout.addStretch()
 
@@ -1132,8 +1239,17 @@ class ReferenceFilePreparer(QWidget):
                 # If running as script
                 app_dir = os.path.dirname(os.path.abspath(__file__))
             
-            # Set output file in the app directory
-            output_file = os.path.join(app_dir, "reference_data.xlsx")
+            # Create a reference_data folder if it doesn't exist
+            reference_data_dir = os.path.join(app_dir, "reference_data")
+            if not os.path.exists(reference_data_dir):
+                os.makedirs(reference_data_dir)
+            
+            # Create filename with timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            output_filename = f"reference_data_{timestamp}.xlsx"
+            
+            # Set output file in the reference_data directory
+            output_file = os.path.join(reference_data_dir, output_filename)
             
             # Create a new workbook
             wb = openpyxl.Workbook()
@@ -1161,7 +1277,7 @@ class ReferenceFilePreparer(QWidget):
             # Save the workbook
             wb.save(output_file)
             
-            self.show_success_message(f"Reference file created successfully!\nSaved as: {output_file}")
+            self.show_success_message(f"Reference file created successfully!\nSaved in the 'reference_data' folder as:\n{output_filename}")
             
         except Exception as e:
             self.show_error_message(f"Error processing file: {str(e)}")
@@ -1233,6 +1349,626 @@ class ReferenceFilePreparer(QWidget):
         ok_button = msg_box.addButton(QMessageBox.StandardButton.Ok)
         ok_button.setStyleSheet(STANDARD_BUTTON_STYLE)
         msg_box.exec()
+
+# ==========================================================log sheet preparer==========================================================#
+
+class GithubDownloadWorker(QThread):
+    progress_signal = pyqtSignal(int)
+    log_signal = pyqtSignal(str)
+    finished_signal = pyqtSignal(list)
+
+    def __init__(self, repo_url, token):
+        super().__init__()
+        self.repo_url = repo_url
+        self.token = token
+        self.downloaded_files = []
+
+    def run(self):
+        try:
+            # Parse the repo URL to extract owner and repo name
+            # Example: "https://github.com/username/repo"
+            parts = self.repo_url.strip('/').split('/')
+            if len(parts) < 5 or parts[2] != 'github.com':
+                self.log_signal.emit("Invalid GitHub repository URL format")
+                return
+
+            owner = parts[3]
+            repo = parts[4]
+
+            # Get repository contents
+            self.log_signal.emit(
+                f"Connecting to GitHub repository: {owner}/{repo}")
+            headers = {
+                'Authorization': f'token {self.token}'} if self.token else {}
+
+            # Get all files in the repository
+            # Specify the backups folder
+            api_url = f"https://api.github.com/repos/{owner}/{repo}/contents/backups"
+            response = requests.get(api_url, headers=headers)
+
+            if response.status_code != 200:
+                self.log_signal.emit(
+                    f"Error accessing repository: {response.status_code}, {response.text}")
+                return
+
+            contents = response.json()
+            excel_files = [item for item in contents if item['name'].endswith(
+                '.xlsx') or item['name'].endswith('.xls')]
+
+            if not excel_files:
+                self.log_signal.emit("No Excel files found in the repository")
+                return
+
+            # Create base directory and imported logs subdirectory
+            # Use a better approach for determining base directory that works with both script and exe
+            if getattr(sys, 'frozen', False):
+                # If the application is run as a bundle, the PyInstaller bootloader
+                # extends the sys module by a flag frozen=True and sets the app 
+                # path into variable sys._MEIPASS
+                base_dir = os.path.dirname(sys.executable)
+            else:
+                base_dir = os.path.dirname(os.path.abspath(__file__))
+            
+            temp_dir = os.path.join(base_dir, 'log_history', 'Imported_logs')
+            os.makedirs(temp_dir, exist_ok=True)
+
+            # Download each Excel file
+            total_files = len(excel_files)
+            for idx, file in enumerate(excel_files):
+                self.log_signal.emit(f"Downloading {file['name']}...")
+
+                download_url = file['download_url']
+                file_response = requests.get(download_url, headers=headers)
+
+                if file_response.status_code == 200:
+                    # Save file locally
+                    file_path = os.path.join(temp_dir, file['name'])
+                    with open(file_path, 'wb') as f:
+                        f.write(file_response.content)
+
+                    self.downloaded_files.append(file_path)
+                    self.log_signal.emit(f"Downloaded {file['name']}")
+                else:
+                    self.log_signal.emit(
+                        f"Failed to download {file['name']}: {file_response.status_code}")
+
+                # Update progress
+                progress = int(((idx + 1) / total_files) * 100)
+                self.progress_signal.emit(progress)
+
+            self.log_signal.emit(
+                f"Downloaded {len(self.downloaded_files)} Excel files")
+            self.finished_signal.emit(self.downloaded_files)
+
+        except Exception as e:
+            self.log_signal.emit(f"Error: {str(e)}")
+            import traceback
+            self.log_signal.emit(traceback.format_exc())
+
+class MergeWorker(QThread):
+    progress_signal = pyqtSignal(int)
+    log_signal = pyqtSignal(str)
+    finished_signal = pyqtSignal(str)
+
+    def __init__(self, files, output_file):
+        super().__init__()
+        self.files = files
+        self.output_file = output_file
+
+    def run(self):
+        try:
+            if not self.files:
+                self.log_signal.emit("No files to merge")
+                return
+
+            self.log_signal.emit(f"Starting merge of {len(self.files)} files")
+
+            # Initialize a list to hold all dataframes
+            all_dfs = []
+
+            # Process each file
+            for idx, file_path in enumerate(self.files):
+                self.log_signal.emit(
+                    f"Processing {os.path.basename(file_path)}")
+
+                try:
+                    # Read all sheets from the Excel file
+                    excel_file = pd.ExcelFile(file_path)
+                    for sheet_name in excel_file.sheet_names:
+                        df = pd.read_excel(file_path, sheet_name=sheet_name)
+
+                        # Only process if the dataframe is not empty
+                        if not df.empty:
+                            # Add file and sheet metadata
+                            df['Source_File'] = os.path.basename(file_path)
+                            df['Source_Sheet'] = sheet_name
+                            all_dfs.append(df)
+                            self.log_signal.emit(
+                                f"Added sheet '{sheet_name}' with {len(df)} rows")
+
+                except Exception as e:
+                    self.log_signal.emit(
+                        f"Error processing {file_path}: {str(e)}")
+                    continue
+
+                # Update progress
+                progress = int(((idx + 1) / len(self.files)) * 100)
+                self.progress_signal.emit(progress)
+
+            if not all_dfs:
+                self.log_signal.emit("No valid data found in the files")
+                return
+
+            # Standardize column names across all dataframes
+            self.log_signal.emit("Standardizing column headers...")
+
+            # Find common columns or use a predefined set of columns
+            # For now, we'll use a simple approach of getting all unique columns
+            all_columns = set()
+            for df in all_dfs:
+                all_columns.update(df.columns)
+
+            # Remove metadata columns we added
+            standard_columns = [col for col in all_columns if col not in [
+                'Source_File', 'Source_Sheet']]
+
+            # Reindex all dataframes with the standard columns
+            standardized_dfs = []
+            for df in all_dfs:
+                # Create a new dataframe with all standard columns (will be filled with NaN for missing columns)
+                new_df = pd.DataFrame(columns=standard_columns)
+
+                # Copy data from original dataframe for matching columns
+                for col in standard_columns:
+                    if col in df.columns:
+                        new_df[col] = df[col]
+
+                # Add back metadata columns
+                new_df['Source_File'] = df['Source_File']
+                new_df['Source_Sheet'] = df['Source_Sheet']
+
+                standardized_dfs.append(new_df)
+
+            # Concatenate all dataframes
+            self.log_signal.emit("Merging all sheets...")
+            merged_df = pd.concat(standardized_dfs, ignore_index=True)
+
+            # Identify and reorder columns as per requirements:
+            # 1. Student ID (looking for column containing "Student" and "ID")
+            # 2. Location (looking for column containing "Location")
+            # 3. Log date (looking for column containing "Log" and "date" or "Date")
+            # 4. Log time (looking for column containing "Log" and "time" or "Time")
+            # 5. All other columns
+
+            self.log_signal.emit("Reordering columns to specified format...")
+
+            # Find the best matching columns based on column names
+            student_id_col = None
+            location_col = None
+            log_date_col = None
+            log_time_col = None
+
+            # Look for exact or partial matches
+            for col in merged_df.columns:
+                col_lower = str(col).lower()
+
+                # Check for Student ID
+                if "student" in col_lower and "id" in col_lower:
+                    student_id_col = col
+                # Check for Location
+                elif "location" in col_lower:
+                    location_col = col
+                # Check for Log date
+                elif "log" in col_lower and ("date" in col_lower or "day" in col_lower):
+                    log_date_col = col
+                # Check for Log time
+                elif "log" in col_lower and "time" in col_lower:
+                    log_time_col = col
+
+            # Create the ordered columns list
+            ordered_columns = []
+
+            # Add the main required columns if they exist
+            for col in [student_id_col, location_col, log_date_col, log_time_col]:
+                if col is not None and col in merged_df.columns:
+                    ordered_columns.append(col)
+
+            # Add all remaining columns (excluding the ones we've already added and metadata)
+            remaining_columns = [col for col in merged_df.columns
+                                if col not in ordered_columns
+                                and col not in ['Source_File', 'Source_Sheet']]
+            ordered_columns.extend(remaining_columns)
+
+            # Add metadata columns at the end
+            ordered_columns.extend(['Source_File', 'Source_Sheet'])
+
+            # Log the column ordering
+            self.log_signal.emit(
+                f"Column order being used: {', '.join(ordered_columns[:4])} + remaining columns")
+
+            # Reorder the dataframe columns
+            merged_df = merged_df[ordered_columns]
+
+            # Make sure the output directory exists
+            os.makedirs(os.path.dirname(self.output_file), exist_ok=True)
+
+            # Save the merged data with reordered columns
+            self.log_signal.emit(f"Saving merged data to {self.output_file}")
+            merged_df.to_excel(self.output_file, index=False)
+
+            self.log_signal.emit(
+                f"Successfully merged {len(all_dfs)} sheets into {self.output_file} with ordered columns")
+            self.finished_signal.emit(self.output_file)
+
+        except Exception as e:
+            self.log_signal.emit(f"Error during merge: {str(e)}")
+            import traceback
+            self.log_signal.emit(traceback.format_exc())
+
+class LogSheetPreparer(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.files_to_merge = []
+        # Define the hardcoded GitHub token - split to avoid detection
+        token_part1 = "github_pat_"
+        token_part2 = "11BREVRNQ0LX45XKQZzjkB_TL3KNQxHy4Sms4Fo20IUcxNLUwNAFbfeiXy92idb3mwTVANNZ4EC92cvkof"
+        self.github_token = token_part1 + token_part2
+        # Define the hardcoded GitHub repo URL - hidden from UI
+        self.github_repo = "https://github.com/MohammadHamdi11/RN-E-attendancerecorderapp"
+        self.setStyleSheet("""
+            background-color: black; 
+            color: white;
+            QLabel {
+                color: white;
+            }
+        """)
+
+        self.init_ui()
+
+    def init_ui(self):
+        # Main layout
+        main_layout = QVBoxLayout(self)
+        main_layout.setSpacing(20)
+        main_layout.setContentsMargins(20, 20, 20, 20)
+
+        # Header layout
+        header_layout = QHBoxLayout()
+        logo_label = QLabel()
+        logo_path = os.path.join(os.path.dirname(__file__), 'ASU1.png')
+        if os.path.exists(logo_path):
+            pixmap = QPixmap(logo_path).scaled(60, 60, Qt.AspectRatioMode.KeepAspectRatio,
+                                               Qt.TransformationMode.SmoothTransformation)
+            logo_label.setPixmap(pixmap)
+        title_label = QLabel("Log Sheet Preparer")
+        title_label.setStyleSheet(f"font-size: 24px; font-weight: bold;")
+        header_layout.addWidget(logo_label)
+        header_layout.addWidget(title_label)
+        header_layout.addStretch()
+
+        # Create vertical layout for header buttons
+        header_buttons_layout = QVBoxLayout()
+        header_buttons_layout.setSpacing(5)
+
+        # Back button
+        back_btn = QPushButton("Back to Home")
+        back_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        back_btn.clicked.connect(self.return_to_home)
+
+        # Exit button
+        exit_btn = QPushButton("Exit")
+        exit_btn.setStyleSheet(EXIT_BUTTON_STYLE)
+        exit_btn.clicked.connect(QApplication.instance().quit)
+
+        # Add buttons to vertical layout
+        header_buttons_layout.addWidget(back_btn)
+        header_buttons_layout.addWidget(exit_btn)
+        header_buttons_layout.addStretch()
+
+        # Add button layout to header
+        header_layout.addStretch()
+        header_layout.addLayout(header_buttons_layout)
+        main_layout.addLayout(header_layout)
+
+        # Import Method Selection
+        import_group = QGroupBox("Import Method")
+        import_group.setStyleSheet(GROUP_BOX_STYLE)
+        import_layout = QVBoxLayout(import_group)
+
+        # Radio buttons for import method
+        radio_layout = QHBoxLayout()
+        self.github_radio = QRadioButton("Import from Cloud Storage")
+        self.github_radio.setChecked(True)  # Default to GitHub import
+        self.local_radio = QRadioButton("Import Local Files")
+        radio_layout.addWidget(self.github_radio)
+        radio_layout.addWidget(self.local_radio)
+        radio_layout.addStretch()
+        import_layout.addLayout(radio_layout)
+
+        # Connect radio buttons to toggle between input methods
+        self.github_radio.toggled.connect(self.toggle_import_method)
+
+        # Stacked widget for different import methods
+        self.import_stack = QStackedWidget()
+
+        # GitHub Import Widget
+        github_widget = QWidget()
+        github_layout = QVBoxLayout(github_widget)
+
+        # Only show informational text about the GitHub repo, hiding the actual implementation details
+        github_info_label = QLabel(
+            "Excel files will be downloaded from the QRScanner-webapp repository's backup folder.")
+        github_layout.addWidget(github_info_label)
+
+        # Button to download files from GitHub
+        download_btn = QPushButton("Download Excel Files from Cloud Storage")
+        download_btn.clicked.connect(self.download_github_files)
+        download_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        github_layout.addWidget(download_btn)
+
+        # Local Files Import Widget
+        local_widget = QWidget()
+        local_layout = QVBoxLayout(local_widget)
+
+        local_files_layout = QHBoxLayout()
+        local_files_layout.addWidget(QLabel("Local Excel Files:"))
+        self.local_files_label = QLineEdit()
+        self.local_files_label.setPlaceholderText("Select Excel file...")
+        self.local_files_label.setMinimumWidth(300)
+        self.local_files_label.setReadOnly(True)
+        local_files_layout.addWidget(self.local_files_label)
+
+        # Button for importing local files
+        browse_btn = QPushButton("Browse")
+        browse_btn.clicked.connect(self.browse_files)
+        browse_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        local_files_layout.addWidget(browse_btn)
+        local_layout.addLayout(local_files_layout)
+
+        # Add widgets to stack
+        self.import_stack.addWidget(github_widget)
+        self.import_stack.addWidget(local_widget)
+        import_layout.addWidget(self.import_stack)
+
+        main_layout.addWidget(import_group)
+
+        # Files Table Section
+        files_group = QGroupBox("Files to Merge")
+        files_group.setStyleSheet(GROUP_BOX_STYLE)
+        files_layout = QVBoxLayout(files_group)
+
+        self.files_table = QTableWidget()
+        self.files_table.setColumnCount(2)
+        self.files_table.setHorizontalHeaderLabels(['File Path', 'Status'])
+
+        # Center align the header text
+        header = self.files_table.horizontalHeader()
+        header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Set column resize modes
+        header.setSectionResizeMode(
+            0, QHeaderView.ResizeMode.Stretch)  # File Path
+        header.setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch)  # Status
+
+        # Apply table styles
+        self.files_table.setStyleSheet(TABLE_STYLE)
+        files_layout.addWidget(self.files_table)
+
+        # Buttons for files table
+        files_btn_layout = QHBoxLayout()
+        clear_files_btn = QPushButton("Clear Files")
+        clear_files_btn.clicked.connect(self.clear_files)
+        clear_files_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        files_btn_layout.addWidget(clear_files_btn)
+        files_layout.addLayout(files_btn_layout)
+
+        main_layout.addWidget(files_group)
+
+        # Progress Bar Section
+        progress_group = QGroupBox("Progress")
+        progress_group.setStyleSheet(GROUP_BOX_STYLE)
+        progress_layout = QVBoxLayout(progress_group)
+
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setTextVisible(True)
+        self.progress_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.progress_bar.setStyleSheet(PROGRESS_BAR_STYLE)
+
+        # Create loading gif label
+        self.loading_label = QLabel()
+        self.loading_label.setFixedSize(24, 24)
+        self.loading_label.setVisible(False)
+
+        # Create the movie object for the GIF
+        self.loading_movie = QMovie()
+        self.loading_movie.setScaledSize(QSize(24, 24))
+        self.loading_label.setMovie(self.loading_movie)
+
+        loading_gif_path = os.path.join(
+            os.path.dirname(__file__), 'loading.gif')
+        if os.path.exists(loading_gif_path):
+            self.loading_movie.setFileName(loading_gif_path)
+        else:
+            print(f"Warning: loading.gif not found at {loading_gif_path}")
+
+        # Create a horizontal layout to hold both the progress bar and loading animation
+        progress_h_layout = QHBoxLayout()
+        progress_h_layout.addWidget(self.progress_bar)
+        progress_h_layout.addWidget(self.loading_label)
+        progress_layout.addLayout(progress_h_layout)
+
+        main_layout.addWidget(progress_group)
+
+        # Output Console Section
+        console_group = QGroupBox("Output Console")
+        console_group.setStyleSheet(GROUP_BOX_STYLE)
+        console_layout = QVBoxLayout(console_group)
+
+        self.output_console = QTextEdit()
+        self.output_console.setReadOnly(True)
+        self.output_console.setMaximumHeight(150)
+        self.output_console.setStyleSheet(CONSOLE_STYLE)
+        console_layout.addWidget(self.output_console)
+        main_layout.addWidget(console_group)
+
+        # Bottom Buttons
+        button_layout = QHBoxLayout()
+        merge_btn = QPushButton("Merge Logs Files")
+        merge_btn.clicked.connect(self.merge_files)
+        merge_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        button_layout.addWidget(merge_btn)
+        main_layout.addLayout(button_layout)
+
+    def toggle_import_method(self):
+        # Set the current import method based on radio button selection
+        if self.github_radio.isChecked():
+            self.import_stack.setCurrentIndex(0)
+        else:
+            self.import_stack.setCurrentIndex(1)
+
+    def return_to_home(self):
+        # Get the stacked widget and switch to the start page
+        stacked_widget = self.parent()
+        if isinstance(stacked_widget, QStackedWidget):
+            stacked_widget.setCurrentIndex(0)
+
+    def browse_files(self):
+        files, _ = QFileDialog.getOpenFileNames(
+            self, "Select Excel Files", "", "Excel Files (*.xlsx *.xls)"
+        )
+        if files:
+            self.files_to_merge = files
+            self.local_files_label.setText(f"{len(files)} files selected")
+            self.update_files_table()
+            self.log_message(f"Selected {len(files)} files for merging")
+
+    def update_files_table(self):
+        # Clear existing table
+        self.files_table.setRowCount(0)
+
+        # Add files to table
+        for file_path in self.files_to_merge:
+            row_position = self.files_table.rowCount()
+            self.files_table.insertRow(row_position)
+
+            # Create items for the cells
+            file_item = QTableWidgetItem(os.path.basename(file_path))
+            status_item = QTableWidgetItem("Ready")
+
+            # Set items to the table
+            self.files_table.setItem(row_position, 0, file_item)
+            self.files_table.setItem(row_position, 1, status_item)
+
+    def clear_files(self):
+        self.files_to_merge = []
+        self.files_table.setRowCount(0)
+        self.local_files_label.setText("No files selected")
+        self.log_message("Cleared all files")
+
+    def log_message(self, message):
+        self.output_console.append(
+            f"[{datetime.now().strftime('%H:%M:%S')}] {message}")
+        # Scroll to the bottom
+        self.output_console.moveCursor(QTextCursor.MoveOperation.End)
+
+    def download_github_files(self):
+        # Use hardcoded repo URL and token - not visible to users
+        repo_url = self.github_repo
+        token = self.github_token
+
+        self.log_message(f"Starting download from Cloud Storage")
+
+        # Start loading animation
+        self.loading_label.setVisible(True)
+        self.loading_movie.start()
+        self.progress_bar.setValue(0)
+
+        # Create and start the worker thread
+        self.github_worker = GithubDownloadWorker(repo_url, token)
+        self.github_worker.progress_signal.connect(self.update_progress)
+        self.github_worker.log_signal.connect(self.log_message)
+        self.github_worker.finished_signal.connect(
+            self.handle_downloaded_files)
+        self.github_worker.start()
+
+    def handle_downloaded_files(self, files):
+        # Update the list of files to merge
+        self.files_to_merge = files
+        self.update_files_table()
+
+        # Stop loading animation
+        self.loading_movie.stop()
+        self.loading_label.setVisible(False)
+
+    def update_progress(self, value):
+        self.progress_bar.setValue(value)
+
+    def merge_files(self):
+        if not self.files_to_merge:
+            self.log_message("No files to merge. Please import files first.")
+            return
+
+        # Generate output filename with timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        output_filename = f"log_history_{timestamp}.xlsx"
+
+        # Create base directory and merged files subdirectory
+        # Use a better approach for determining base directory that works with both script and exe
+        if getattr(sys, 'frozen', False):
+            # If the application is run as a bundle, the PyInstaller bootloader
+            # extends the sys module by a flag frozen=True and sets the app 
+            # path into variable sys._MEIPASS
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        output_dir = os.path.join(base_dir, 'log_history', 'Merged_Files')
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Full path for output file
+        output_file = os.path.join(output_dir, output_filename)
+
+        self.log_message(f"Merging files to: {output_file}")
+
+        # Start loading animation
+        self.loading_label.setVisible(True)
+        self.loading_movie.start()
+        self.progress_bar.setValue(0)
+
+        # Create and start the worker thread
+        self.merge_worker = MergeWorker(self.files_to_merge, output_file)
+        self.merge_worker.progress_signal.connect(self.update_progress)
+        self.merge_worker.log_signal.connect(self.log_message)
+        self.merge_worker.finished_signal.connect(self.handle_merge_complete)
+        self.merge_worker.start()
+
+    def handle_merge_complete(self, output_file):
+        # Stop loading animation
+        self.loading_movie.stop()
+        self.loading_label.setVisible(False)
+
+        self.log_message(f"Merge completed successfully: {output_file}")
+
+        # Ask if user wants to open the merged file
+        from PyQt6.QtWidgets import QMessageBox
+        reply = QMessageBox.question(
+            self, 'Merge Complete',
+            f'Merge completed successfully!\nThe merged file has been saved as:\n{os.path.basename(output_file)}\n\nWould you like to open the merged file?',
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.Yes
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            # Open the file with the default application
+            import subprocess
+            import platform
+
+            if platform.system() == 'Windows':
+                os.startfile(output_file)
+            elif platform.system() == 'Darwin':  # macOS
+                subprocess.call(('open', output_file))
+            else:  # Linux
+                subprocess.call(('xdg-open', output_file))
 
 # ==========================================================Schedule Manager==========================================================#
 
@@ -1394,6 +2130,14 @@ class ScheduleManager(QWidget):
         add_sessions_group = QGroupBox("Add New Sessions")
         add_sessions_group.setStyleSheet(GROUP_BOX_STYLE)
         add_sessions_layout = QVBoxLayout(add_sessions_group)  # Use vertical layout as container
+        
+        # MODULE NAME INPUT - Add this new section
+        module_name_layout = QHBoxLayout()
+        module_name_layout.addWidget(QLabel("Module Name:"))
+        self.module_name_input = QLineEdit()
+        self.module_name_input.setPlaceholderText("Enter module name...")
+        module_name_layout.addWidget(self.module_name_input)
+        add_sessions_layout.addLayout(module_name_layout)
         
         # Create horizontal layout for the form fields
         form_layout = QHBoxLayout()
@@ -1609,6 +2353,13 @@ class ScheduleManager(QWidget):
         file_group = QGroupBox("Select Schedule to Update")
         file_group.setStyleSheet(GROUP_BOX_STYLE)
         file_layout = QHBoxLayout(file_group)
+        
+        # MODULE NAME INPUT - Add this new section
+        module_name_layout = QHBoxLayout()
+        module_name_layout.addWidget(QLabel("Module Name:"))
+        self.update_module_name_input = QLineEdit()
+        self.update_module_name_input.setPlaceholderText("Enter module name...")
+        file_layout.addWidget(self.update_module_name_input)
         
         self.update_file_input = QLineEdit()
         self.update_file_input.setPlaceholderText("Select Excel schedule file...")
@@ -2148,24 +2899,40 @@ class ScheduleManager(QWidget):
         if not file_path:
             self.show_message_box("Error", "Please select a file first")
             return
-
+        
         try:
             # Clear existing data
             self.existing_table.setRowCount(0)
-
+            
             # Load Excel file
             wb = openpyxl.load_workbook(file_path)
             sheet = wb.active
-
+            
+            # Try to get module name from sheet title
+            module_name = sheet.title
+            if module_name and module_name != "Sheet":  # If it's not the default sheet name
+                self.update_module_name_input.setText(module_name)
+            
+            # Check if the first row contains "Module:" (old format) or headers (new format)
+            first_cell = sheet.cell(row=1, column=1).value
+            if first_cell and isinstance(first_cell, str) and first_cell.startswith("Module:"):
+                # Old format with module name in first row
+                module_name = first_cell.replace("Module:", "").strip()
+                self.update_module_name_input.setText(module_name)
+                start_row = 3  # Start reading data from row 3
+            else:
+                # New format with headers in first row
+                start_row = 2  # Start reading data from row 2
+            
             # Skip header row
             row_count = 0
-            for row in sheet.iter_rows(min_row=2, values_only=True):
+            for row in sheet.iter_rows(min_row=start_row, values_only=True):
                 if all(cell is None for cell in row):
                     continue  # Skip empty rows
-
+                
                 # Add row to table
                 self.existing_table.insertRow(row_count)
-
+                
                 # Set data in table
                 # Only use the first 7 columns
                 for col, cell_value in enumerate(row[:7]):
@@ -2173,112 +2940,126 @@ class ScheduleManager(QWidget):
                     item = QTableWidgetItem(value)
                     item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                     self.existing_table.setItem(row_count, col, item)
-
+                
                 row_count += 1
-
+            
         except Exception as e:
-            self.show_message_box(
-                "Error", f"Failed to load schedule: {str(e)}")
-
+            self.show_message_box("Error", f"Failed to load schedule: {str(e)}")
+    
     def save_schedule(self):
-        """Save the created schedule to Excel file"""
+        """Save the created schedule to Excel file directly without prompting"""
         if len(self.schedule_data) == 0:
             self.show_message_box("Error", "No schedule data to save")
             return
-
+    
+        # Get module name (default if empty)
+        module_name = self.module_name_input.text().strip()
+        if not module_name:
+            module_name = "Untitled_Module"
+    
         try:
-            # Ask for save location
-            filename, _ = QFileDialog.getSaveFileName(
-                self, "Save Schedule", "", "Excel Files (*.xlsx)")
-
-            if not filename:
-                return  # User cancelled
-
-            # Add .xlsx extension if missing
-            if not filename.lower().endswith('.xlsx'):
-                filename += '.xlsx'
-
+            # Create modules_schedules directory in the current working directory
+            # This will be where the EXE is running from
+            save_dir = os.path.join(os.getcwd(), "modules_schedules")
+            os.makedirs(save_dir, exist_ok=True)
+    
+            # Generate timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+            # Create filename with module name and timestamp
+            filename = f"{module_name}_{timestamp}.xlsx"
+            filepath = os.path.join(save_dir, filename)
+        
             # Create a new workbook
             wb = openpyxl.Workbook()
             ws = wb.active
-
-            # Add headers
-            headers = ['Year', 'Group', 'Subject',
-                       'Session', 'Location', 'Date', 'Start Time']
+        
+            # Name the worksheet with the module name (limit to 31 chars as Excel has a limit)
+            ws.title = module_name[:31]
+        
+            # Add headers in row 1 (no module name row anymore)
+            headers = ['Year', 'Group', 'Subject', 'Session', 'Location', 'Date', 'Start Time']
             for col, header in enumerate(headers, start=1):
                 ws.cell(row=1, column=col).value = header
                 ws.cell(row=1, column=col).font = openpyxl.styles.Font(bold=True)
-
+        
             # Sort data by Year, Group, and then Session number
             sorted_data = sorted(self.schedule_data,
                                  key=lambda x: (x[0], x[1], int(x[3])))
-
-            # Add data
+        
+            # Add data starting from row 2 (was row 3 before)
             for row_idx, row_data in enumerate(sorted_data, start=2):
                 for col_idx, cell_value in enumerate(row_data, start=1):
                     ws.cell(row=row_idx, column=col_idx).value = cell_value
-
-            # Auto-fit columns
-            for col in ws.columns:
+        
+            # Auto-fit columns - modified to use all rows including header
+            for col in range(1, 8):  # Columns A through G
                 max_length = 0
-                column = col[0].column_letter
-                for cell in col:
+                column_letter = openpyxl.utils.get_column_letter(col)
+            
+                # Include all rows
+                for row in range(1, ws.max_row + 1):
+                    cell = ws.cell(row=row, column=col)
                     try:
-                        if len(str(cell.value)) > max_length:
+                        if cell.value and len(str(cell.value)) > max_length:
                             max_length = len(str(cell.value))
                     except:
                         pass
+            
                 adjusted_width = (max_length + 2)
-                ws.column_dimensions[column].width = adjusted_width
-
+                ws.column_dimensions[column_letter].width = adjusted_width
+        
             # Save the file
-            wb.save(filename)
-
-            self.show_message_box("Success", "Schedule saved successfully")
-
+            wb.save(filepath)
+        
+            self.show_message_box("Success", f"Schedule saved successfully to:\n{filepath}")
+        
         except Exception as e:
-            self.show_message_box(
-                "Error", f"Failed to save schedule: {str(e)}")
-
+            self.show_message_box("Error", f"Failed to save schedule: {str(e)}")
+    
     def update_schedule(self):
-        """Update the existing schedule with new sessions"""
+        """Update the existing schedule with new sessions without prompting for save location"""
         # Check if we have loaded an existing schedule
         if self.existing_table.rowCount() == 0:
-            self.show_message_box(
-                "Error", "Please load an existing schedule first")
+            self.show_message_box("Error", "Please load an existing schedule first")
             return
-
+    
         # Check if we have new sessions to add
         if self.new_sessions_table.rowCount() == 0:
             self.show_message_box("Error", "No new sessions to add")
             return
-
+    
+        # Get module name (default if empty)
+        module_name = self.update_module_name_input.text().strip()
+        if not module_name:
+            module_name = "Untitled_Module"
+    
         try:
-            # Get original filename
-            original_file = self.update_file_input.text()
-
-            # Ask for save location
-            filename, _ = QFileDialog.getSaveFileName(
-                self, "Save Updated Schedule", "", "Excel Files (*.xlsx)")
-
-            if not filename:
-                return  # User cancelled
-
-            # Add .xlsx extension if missing
-            if not filename.lower().endswith('.xlsx'):
-                filename += '.xlsx'
-
+            # Create modules_schedules directory in the current working directory
+            # This will be where the EXE is running from
+            save_dir = os.path.join(os.getcwd(), "modules_schedules")
+            os.makedirs(save_dir, exist_ok=True)
+        
+            # Generate timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+            # Create filename with module name and timestamp
+            filename = f"{module_name}_updated_{timestamp}.xlsx"
+            filepath = os.path.join(save_dir, filename)
+        
             # Create a new workbook
             wb = openpyxl.Workbook()
             ws = wb.active
-
-            # Add headers
-            headers = ['Year', 'Group', 'Subject',
-                       'Session', 'Location', 'Date', 'Start Time']
+        
+            # Name the worksheet with the module name (limit to 31 chars as Excel has a limit)
+            ws.title = module_name[:31]
+        
+            # Add headers in row 1 (no module name row anymore)
+            headers = ['Year', 'Group', 'Subject', 'Session', 'Location', 'Date', 'Start Time']
             for col, header in enumerate(headers, start=1):
                 ws.cell(row=1, column=col).value = header
                 ws.cell(row=1, column=col).font = openpyxl.styles.Font(bold=True)
-
+        
             # Collect existing data
             existing_data = []
             for row in range(self.existing_table.rowCount()):
@@ -2287,7 +3068,7 @@ class ScheduleManager(QWidget):
                     value = self.existing_table.item(row, col).text()
                     row_data.append(value)
                 existing_data.append(row_data)
-
+        
             # Collect new data
             new_data = []
             for row in range(self.new_sessions_table.rowCount()):
@@ -2296,61 +3077,64 @@ class ScheduleManager(QWidget):
                     value = self.new_sessions_table.item(row, col).text()
                     row_data.append(value)
                 new_data.append(row_data)
-
+        
             # Combine data - group by Year and Group
             grouped_data = {}
-
+        
             # Process existing data
             for row in existing_data:
                 key = (row[0], row[1])  # (Year, Group)
                 if key not in grouped_data:
                     grouped_data[key] = []
                 grouped_data[key].append(row)
-
+        
             # Add new data to appropriate groups
             for row in new_data:
                 key = (row[0], row[1])  # (Year, Group)
                 if key not in grouped_data:
                     grouped_data[key] = []
                 grouped_data[key].append(row)
-
+        
             # Sort groups by year and group name
             sorted_keys = sorted(grouped_data.keys())
-
+        
             # Prepare final data - sort each group by session number
             final_data = []
             for key in sorted_keys:
                 # Sort by session number within each group
                 group_data = sorted(grouped_data[key], key=lambda x: int(x[3]))
                 final_data.extend(group_data)
-
-            # Add data to worksheet
+        
+            # Add data to worksheet starting from row 2 (was row 3 before)
             for row_idx, row_data in enumerate(final_data, start=2):
                 for col_idx, cell_value in enumerate(row_data, start=1):
                     ws.cell(row=row_idx, column=col_idx).value = cell_value
-
-            # Auto-fit columns
-            for col in ws.columns:
+        
+            # Auto-fit columns - include all rows
+            for col in range(1, 8):  # Columns A through G
                 max_length = 0
-                column = col[0].column_letter
-                for cell in col:
+                column_letter = openpyxl.utils.get_column_letter(col)
+            
+                # Include all rows
+                for row in range(1, ws.max_row + 1):
+                    cell = ws.cell(row=row, column=col)
                     try:
-                        if len(str(cell.value)) > max_length:
+                        if cell.value and len(str(cell.value)) > max_length:
                             max_length = len(str(cell.value))
                     except:
                         pass
+            
                 adjusted_width = (max_length + 2)
-                ws.column_dimensions[column].width = adjusted_width
-
+                ws.column_dimensions[column_letter].width = adjusted_width
+        
             # Save the file
-            wb.save(filename)
-
-            self.show_message_box("Success", "Schedule updated successfully")
-
+            wb.save(filepath)
+        
+            self.show_message_box("Success", f"Schedule updated successfully to:\n{filepath}")
+        
         except Exception as e:
-            self.show_message_box(
-                "Error", f"Failed to update schedule: {str(e)}")
-
+            self.show_message_box("Error", f"Failed to update schedule: {str(e)}")
+            
     def show_message_box(self, title, message):
         """Show a message box with the given title and message"""
         msg_box = QMessageBox()
@@ -2986,9 +3770,11 @@ class ProcessThread(QThread):
                 output_wb = openpyxl.Workbook()
                 output_wb.remove(output_wb.active)
                 
-                self.create_valid_logs_sheet(output_wb, 'Attendance', valid_attendance)
+                # Create Summary sheet first, then Attendance sheet
                 self.create_summary_sheet(output_wb, 'Summary', valid_attendance, session_details,
                                         student_map, f"Year {year}", completed_sessions, total_required, department)
+                self.create_valid_logs_sheet(output_wb, 'Attendance', valid_attendance)
+
                 current_step += 1
                 self.progress_updated.emit(int(current_step / total_steps * 100))
                 
@@ -3106,7 +3892,7 @@ class ProcessThread(QThread):
             cell.alignment = openpyxl.styles.Alignment(horizontal="center")
         
         # Freeze the header row
-        sheet.freeze_panes = "A2"
+        sheet.freeze_panes = "C2"
         
         for key in data:
             for row in data[key]:
@@ -3144,7 +3930,7 @@ class ProcessThread(QThread):
             cell.alignment = openpyxl.styles.Alignment(horizontal="center")
         
         # Freeze the header row
-        sheet.freeze_panes = "A2"
+        sheet.freeze_panes = "C2"
         
         # Create alternating row colors for better readability
         light_blue = openpyxl.styles.PatternFill(start_color="F2F7FD", end_color="F2F7FD", fill_type="solid")
@@ -4849,586 +5635,6 @@ class PopulateWorker(QObject):
         finally:
             # Always reset running state in finally block
             self.is_running = False
-
-#==========================================================log sheet preparer==========================================================#
-
-class GithubDownloadWorker(QThread):
-    progress_signal = pyqtSignal(int)
-    log_signal = pyqtSignal(str)
-    finished_signal = pyqtSignal(list)
-    
-    def __init__(self, repo_url, token):
-        super().__init__()
-        self.repo_url = repo_url
-        self.token = token
-        self.downloaded_files = []
-        
-    def run(self):
-        try:
-            # Parse the repo URL to extract owner and repo name
-            # Example: "https://github.com/username/repo"
-            parts = self.repo_url.strip('/').split('/')
-            if len(parts) < 5 or parts[2] != 'github.com':
-                self.log_signal.emit("Invalid GitHub repository URL format")
-                return
-                
-            owner = parts[3]
-            repo = parts[4]
-            
-            # Get repository contents
-            self.log_signal.emit(f"Connecting to GitHub repository: {owner}/{repo}")
-            headers = {'Authorization': f'token {self.token}'} if self.token else {}
-            
-            # Get all files in the repository
-            api_url = f"https://api.github.com/repos/{owner}/{repo}/contents/backups"  # Specify the backups folder
-            response = requests.get(api_url, headers=headers)
-            
-            if response.status_code != 200:
-                self.log_signal.emit(f"Error accessing repository: {response.status_code}, {response.text}")
-                return
-                
-            contents = response.json()
-            excel_files = [item for item in contents if item['name'].endswith('.xlsx') or item['name'].endswith('.xls')]
-            
-            if not excel_files:
-                self.log_signal.emit("No Excel files found in the repository")
-                return
-                
-            # Create temp directory if it doesn't exist
-            temp_dir = os.path.join(os.path.dirname(__file__), 'Imported_scan_logs')
-            os.makedirs(temp_dir, exist_ok=True)
-            
-            # Download each Excel file
-            total_files = len(excel_files)
-            for idx, file in enumerate(excel_files):
-                self.log_signal.emit(f"Downloading {file['name']}...")
-                
-                download_url = file['download_url']
-                file_response = requests.get(download_url, headers=headers)
-                
-                if file_response.status_code == 200:
-                    # Save file locally
-                    file_path = os.path.join(temp_dir, file['name'])
-                    with open(file_path, 'wb') as f:
-                        f.write(file_response.content)
-                    
-                    self.downloaded_files.append(file_path)
-                    self.log_signal.emit(f"Downloaded {file['name']}")
-                else:
-                    self.log_signal.emit(f"Failed to download {file['name']}: {file_response.status_code}")
-                
-                # Update progress
-                progress = int(((idx + 1) / total_files) * 100)
-                self.progress_signal.emit(progress)
-                
-            self.log_signal.emit(f"Downloaded {len(self.downloaded_files)} Excel files")
-            self.finished_signal.emit(self.downloaded_files)
-            
-        except Exception as e:
-            self.log_signal.emit(f"Error: {str(e)}")
-            import traceback
-            self.log_signal.emit(traceback.format_exc())
-
-class MergeWorker(QThread):
-    progress_signal = pyqtSignal(int)
-    log_signal = pyqtSignal(str)
-    finished_signal = pyqtSignal(str)
-    
-    def __init__(self, files, output_file):
-        super().__init__()
-        self.files = files
-        self.output_file = output_file
-        
-    def run(self):
-        try:
-            if not self.files:
-                self.log_signal.emit("No files to merge")
-                return
-                
-            self.log_signal.emit(f"Starting merge of {len(self.files)} files")
-            
-            # Initialize a list to hold all dataframes
-            all_dfs = []
-            
-            # Process each file
-            for idx, file_path in enumerate(self.files):
-                self.log_signal.emit(f"Processing {os.path.basename(file_path)}")
-                
-                try:
-                    # Read all sheets from the Excel file
-                    excel_file = pd.ExcelFile(file_path)
-                    for sheet_name in excel_file.sheet_names:
-                        df = pd.read_excel(file_path, sheet_name=sheet_name)
-                        
-                        # Only process if the dataframe is not empty
-                        if not df.empty:
-                            # Add file and sheet metadata
-                            df['Source_File'] = os.path.basename(file_path)
-                            df['Source_Sheet'] = sheet_name
-                            all_dfs.append(df)
-                            self.log_signal.emit(f"Added sheet '{sheet_name}' with {len(df)} rows")
-                            
-                except Exception as e:
-                    self.log_signal.emit(f"Error processing {file_path}: {str(e)}")
-                    continue
-                
-                # Update progress
-                progress = int(((idx + 1) / len(self.files)) * 100)
-                self.progress_signal.emit(progress)
-            
-            if not all_dfs:
-                self.log_signal.emit("No valid data found in the files")
-                return
-                
-            # Standardize column names across all dataframes
-            self.log_signal.emit("Standardizing column headers...")
-            
-            # Find common columns or use a predefined set of columns
-            # For now, we'll use a simple approach of getting all unique columns
-            all_columns = set()
-            for df in all_dfs:
-                all_columns.update(df.columns)
-                
-            # Remove metadata columns we added
-            standard_columns = [col for col in all_columns if col not in ['Source_File', 'Source_Sheet']]
-            
-            # Reindex all dataframes with the standard columns
-            standardized_dfs = []
-            for df in all_dfs:
-                # Create a new dataframe with all standard columns (will be filled with NaN for missing columns)
-                new_df = pd.DataFrame(columns=standard_columns)
-                
-                # Copy data from original dataframe for matching columns
-                for col in standard_columns:
-                    if col in df.columns:
-                        new_df[col] = df[col]
-                
-                # Add back metadata columns
-                new_df['Source_File'] = df['Source_File']
-                new_df['Source_Sheet'] = df['Source_Sheet']
-                
-                standardized_dfs.append(new_df)
-            
-            # Concatenate all dataframes
-            self.log_signal.emit("Merging all sheets...")
-            merged_df = pd.concat(standardized_dfs, ignore_index=True)
-            
-            # Identify and reorder columns as per requirements:
-            # 1. Student ID (looking for column containing "Student" and "ID")
-            # 2. Location (looking for column containing "Location")
-            # 3. Log date (looking for column containing "Log" and "date" or "Date")
-            # 4. Log time (looking for column containing "Log" and "time" or "Time")
-            # 5. All other columns
-            
-            self.log_signal.emit("Reordering columns to specified format...")
-            
-            # Find the best matching columns based on column names
-            student_id_col = None
-            location_col = None
-            log_date_col = None
-            log_time_col = None
-            
-            # Look for exact or partial matches
-            for col in merged_df.columns:
-                col_lower = str(col).lower()
-                
-                # Check for Student ID
-                if "student" in col_lower and "id" in col_lower:
-                    student_id_col = col
-                # Check for Location
-                elif "location" in col_lower:
-                    location_col = col
-                # Check for Log date
-                elif "log" in col_lower and ("date" in col_lower or "day" in col_lower):
-                    log_date_col = col
-                # Check for Log time
-                elif "log" in col_lower and "time" in col_lower:
-                    log_time_col = col
-            
-            # Create the ordered columns list
-            ordered_columns = []
-            
-            # Add the main required columns if they exist
-            for col in [student_id_col, location_col, log_date_col, log_time_col]:
-                if col is not None and col in merged_df.columns:
-                    ordered_columns.append(col)
-            
-            # Add all remaining columns (excluding the ones we've already added and metadata)
-            remaining_columns = [col for col in merged_df.columns 
-                               if col not in ordered_columns 
-                               and col not in ['Source_File', 'Source_Sheet']]
-            ordered_columns.extend(remaining_columns)
-            
-            # Add metadata columns at the end
-            ordered_columns.extend(['Source_File', 'Source_Sheet'])
-            
-            # Log the column ordering
-            self.log_signal.emit(f"Column order being used: {', '.join(ordered_columns[:4])} + remaining columns")
-            
-            # Reorder the dataframe columns
-            merged_df = merged_df[ordered_columns]
-            
-            # Save the merged data with reordered columns
-            self.log_signal.emit(f"Saving merged data to {self.output_file}")
-            merged_df.to_excel(self.output_file, index=False)
-            
-            self.log_signal.emit(f"Successfully merged {len(all_dfs)} sheets into {self.output_file} with ordered columns")
-            self.finished_signal.emit(self.output_file)
-            
-        except Exception as e:
-            self.log_signal.emit(f"Error during merge: {str(e)}")
-            import traceback
-            self.log_signal.emit(traceback.format_exc())
-
-class LogSheetPreparer(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.files_to_merge = []
-        # Define the hardcoded GitHub token - split to avoid detection
-        token_part1 = "github_pat_"
-        token_part2 = "11BREVRNQ0LX45XKQZzjkB_TL3KNQxHy4Sms4Fo20IUcxNLUwNAFbfeiXy92idb3mwTVANNZ4EC92cvkof"
-        self.github_token = token_part1 + token_part2
-        # Define the hardcoded GitHub repo URL - hidden from UI
-        self.github_repo = "https://github.com/MohammadHamdi11/RN-E-attendancerecorderapp"
-        self.setStyleSheet("""
-            background-color: black; 
-            color: white;
-            QLabel {
-                color: white;
-            }
-        """)
-        
-        self.init_ui()
-        
-    def init_ui(self):
-        # Main layout
-        main_layout = QVBoxLayout(self)
-        main_layout.setSpacing(20)
-        main_layout.setContentsMargins(20, 20, 20, 20)
-        
-        # Header layout
-        header_layout = QHBoxLayout()
-        logo_label = QLabel()
-        logo_path = os.path.join(os.path.dirname(__file__), 'ASU1.png')
-        if os.path.exists(logo_path):
-            pixmap = QPixmap(logo_path).scaled(60, 60, Qt.AspectRatioMode.KeepAspectRatio, 
-                                             Qt.TransformationMode.SmoothTransformation)
-            logo_label.setPixmap(pixmap)
-        title_label = QLabel("Log Sheet Preparer")
-        title_label.setStyleSheet(f"font-size: 24px; font-weight: bold;")
-        header_layout.addWidget(logo_label)
-        header_layout.addWidget(title_label)
-        header_layout.addStretch()
-        
-        # Create vertical layout for header buttons
-        header_buttons_layout = QVBoxLayout()
-        header_buttons_layout.setSpacing(5)
-        
-        # Back button
-        back_btn = QPushButton("Back to Home")
-        back_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
-        back_btn.clicked.connect(self.return_to_home)
-        
-        # Exit button
-        exit_btn = QPushButton("Exit")
-        exit_btn.setStyleSheet(EXIT_BUTTON_STYLE)
-        exit_btn.clicked.connect(QApplication.instance().quit)
-        
-        # Add buttons to vertical layout
-        header_buttons_layout.addWidget(back_btn)
-        header_buttons_layout.addWidget(exit_btn)
-        header_buttons_layout.addStretch()
-        
-        # Add button layout to header
-        header_layout.addStretch()
-        header_layout.addLayout(header_buttons_layout)
-        main_layout.addLayout(header_layout)
-        
-        # Import Method Selection
-        import_group = QGroupBox("Import Method")
-        import_group.setStyleSheet(GROUP_BOX_STYLE)
-        import_layout = QVBoxLayout(import_group)
-        
-        # Radio buttons for import method
-        radio_layout = QHBoxLayout()
-        self.github_radio = QRadioButton("Import from Cloud Storage")
-        self.github_radio.setChecked(True)  # Default to GitHub import
-        self.local_radio = QRadioButton("Import Local Files")
-        radio_layout.addWidget(self.github_radio)
-        radio_layout.addWidget(self.local_radio)
-        radio_layout.addStretch()
-        import_layout.addLayout(radio_layout)
-        
-        # Connect radio buttons to toggle between input methods
-        self.github_radio.toggled.connect(self.toggle_import_method)
-        
-        # Stacked widget for different import methods
-        self.import_stack = QStackedWidget()
-        
-        # GitHub Import Widget
-        github_widget = QWidget()
-        github_layout = QVBoxLayout(github_widget)
-        
-        # Only show informational text about the GitHub repo, hiding the actual implementation details
-        github_info_label = QLabel("Excel files will be downloaded from the QRScanner-webapp repository's backup folder.")
-        github_layout.addWidget(github_info_label)
-        
-        # Button to download files from GitHub
-        download_btn = QPushButton("Download Excel Files from Cloud Storage")
-        download_btn.clicked.connect(self.download_github_files)
-        download_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
-        github_layout.addWidget(download_btn)
-        
-        # Local Files Import Widget
-        local_widget = QWidget()
-        local_layout = QVBoxLayout(local_widget)
-        
-        local_files_layout = QHBoxLayout()
-        local_files_layout.addWidget(QLabel("Local Excel Files:"))
-        self.local_files_label = QLineEdit()
-        self.local_files_label.setPlaceholderText("Select Excel file...")
-        self.local_files_label.setMinimumWidth(300)
-        self.local_files_label.setReadOnly(True)
-        local_files_layout.addWidget(self.local_files_label)
-        
-        # Button for importing local files
-        browse_btn = QPushButton("Browse")
-        browse_btn.clicked.connect(self.browse_files)
-        browse_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
-        local_files_layout.addWidget(browse_btn)
-        local_layout.addLayout(local_files_layout)
-        
-        # Add widgets to stack
-        self.import_stack.addWidget(github_widget)
-        self.import_stack.addWidget(local_widget)
-        import_layout.addWidget(self.import_stack)
-        
-        main_layout.addWidget(import_group)
-        
-        # Files Table Section
-        files_group = QGroupBox("Files to Merge")
-        files_group.setStyleSheet(GROUP_BOX_STYLE)
-        files_layout = QVBoxLayout(files_group)
-        
-        self.files_table = QTableWidget()
-        self.files_table.setColumnCount(2)
-        self.files_table.setHorizontalHeaderLabels(['File Path', 'Status'])
-        
-        # Center align the header text
-        header = self.files_table.horizontalHeader()
-        header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
-        
-        # Set column resize modes
-        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)  # File Path
-        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)  # Status
-        
-        # Apply table styles
-        self.files_table.setStyleSheet(TABLE_STYLE)
-        files_layout.addWidget(self.files_table)
-        
-        # Buttons for files table
-        files_btn_layout = QHBoxLayout()
-        clear_files_btn = QPushButton("Clear Files")
-        clear_files_btn.clicked.connect(self.clear_files)
-        clear_files_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
-        files_btn_layout.addWidget(clear_files_btn)
-        files_layout.addLayout(files_btn_layout)
-        
-        main_layout.addWidget(files_group)
-        
-        # Progress Bar Section
-        progress_group = QGroupBox("Progress")
-        progress_group.setStyleSheet(GROUP_BOX_STYLE)
-        progress_layout = QVBoxLayout(progress_group)
-        
-        self.progress_bar = QProgressBar()
-        self.progress_bar.setTextVisible(True)
-        self.progress_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.progress_bar.setStyleSheet(PROGRESS_BAR_STYLE)
-        
-        # Create loading gif label
-        self.loading_label = QLabel()
-        self.loading_label.setFixedSize(24, 24)
-        self.loading_label.setVisible(False)
-                
-        # Create the movie object for the GIF
-        self.loading_movie = QMovie()
-        self.loading_movie.setScaledSize(QSize(24, 24))
-        self.loading_label.setMovie(self.loading_movie)
-        
-        loading_gif_path = os.path.join(os.path.dirname(__file__), 'loading.gif')
-        if os.path.exists(loading_gif_path):
-            self.loading_movie.setFileName(loading_gif_path)
-        else:
-            print(f"Warning: loading.gif not found at {loading_gif_path}")
-            
-        # Create a horizontal layout to hold both the progress bar and loading animation
-        progress_h_layout = QHBoxLayout()
-        progress_h_layout.addWidget(self.progress_bar)
-        progress_h_layout.addWidget(self.loading_label)
-        progress_layout.addLayout(progress_h_layout)
-        
-        main_layout.addWidget(progress_group)
-        
-        # Output Console Section
-        console_group = QGroupBox("Output Console")
-        console_group.setStyleSheet(GROUP_BOX_STYLE)
-        console_layout = QVBoxLayout(console_group)
-
-        self.output_console = QTextEdit()
-        self.output_console.setReadOnly(True)
-        self.output_console.setMaximumHeight(150)
-        self.output_console.setStyleSheet(CONSOLE_STYLE)  
-        console_layout.addWidget(self.output_console)
-        main_layout.addWidget(console_group)
-        
-        # Bottom Buttons
-        button_layout = QHBoxLayout()
-        merge_btn = QPushButton("Merge Logs Files")
-        merge_btn.clicked.connect(self.merge_files)
-        merge_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
-        button_layout.addWidget(merge_btn)
-        main_layout.addLayout(button_layout)
-        
-    def toggle_import_method(self):
-        # Set the current import method based on radio button selection
-        if self.github_radio.isChecked():
-            self.import_stack.setCurrentIndex(0)
-        else:
-            self.import_stack.setCurrentIndex(1)
-            
-    def return_to_home(self):
-        # Get the stacked widget and switch to the start page
-        stacked_widget = self.parent()
-        if isinstance(stacked_widget, QStackedWidget):
-            stacked_widget.setCurrentIndex(0)
-            
-    def browse_files(self):
-        files, _ = QFileDialog.getOpenFileNames(
-            self, "Select Excel Files", "", "Excel Files (*.xlsx *.xls)"
-        )
-        if files:
-            self.files_to_merge = files
-            self.local_files_label.setText(f"{len(files)} files selected")
-            self.update_files_table()
-            self.log_message(f"Selected {len(files)} files for merging")
-            
-    def update_files_table(self):
-        # Clear existing table
-        self.files_table.setRowCount(0)
-        
-        # Add files to table
-        for file_path in self.files_to_merge:
-            row_position = self.files_table.rowCount()
-            self.files_table.insertRow(row_position)
-            
-            # Create items for the cells
-            file_item = QTableWidgetItem(os.path.basename(file_path))
-            status_item = QTableWidgetItem("Ready")
-            
-            # Set items to the table
-            self.files_table.setItem(row_position, 0, file_item)
-            self.files_table.setItem(row_position, 1, status_item)
-            
-    def clear_files(self):
-        self.files_to_merge = []
-        self.files_table.setRowCount(0)
-        self.local_files_label.setText("No files selected")
-        self.log_message("Cleared all files")
-            
-    def log_message(self, message):
-        self.output_console.append(f"[{datetime.now().strftime('%H:%M:%S')}] {message}")
-        # Scroll to the bottom
-        self.output_console.moveCursor(QTextCursor.MoveOperation.End)
-        
-    def download_github_files(self):
-        # Use hardcoded repo URL and token - not visible to users
-        repo_url = self.github_repo
-        token = self.github_token
-        
-        self.log_message(f"Starting download from Cloud Storage")
-        
-        # Start loading animation
-        self.loading_label.setVisible(True)
-        self.loading_movie.start()
-        self.progress_bar.setValue(0)
-        
-        # Create and start the worker thread
-        self.github_worker = GithubDownloadWorker(repo_url, token)
-        self.github_worker.progress_signal.connect(self.update_progress)
-        self.github_worker.log_signal.connect(self.log_message)
-        self.github_worker.finished_signal.connect(self.handle_downloaded_files)
-        self.github_worker.start()
-
-    def handle_downloaded_files(self, files):
-        # Update the list of files to merge
-        self.files_to_merge = files
-        self.update_files_table()
-        
-        # Stop loading animation
-        self.loading_movie.stop()
-        self.loading_label.setVisible(False)
-        
-    def update_progress(self, value):
-        self.progress_bar.setValue(value)
-        
-    def merge_files(self):
-        if not self.files_to_merge:
-            self.log_message("No files to merge. Please import files first.")
-            return
-            
-        # Generate output filename with timestamp
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        output_filename = f"prepared_log_history_{timestamp}.xlsx"
-        
-        # Create 'Output' directory if it doesn't exist
-        output_dir = os.path.join(os.path.dirname(__file__), 'Merged Files')
-        os.makedirs(output_dir, exist_ok=True)
-        
-        # Full path for output file
-        output_file = os.path.join(output_dir, output_filename)
-        
-        self.log_message(f"Merging files to: {output_file}")
-            
-        # Start loading animation
-        self.loading_label.setVisible(True)
-        self.loading_movie.start()
-        self.progress_bar.setValue(0)
-        
-        # Create and start the worker thread
-        self.merge_worker = MergeWorker(self.files_to_merge, output_file)
-        self.merge_worker.progress_signal.connect(self.update_progress)
-        self.merge_worker.log_signal.connect(self.log_message)
-        self.merge_worker.finished_signal.connect(self.handle_merge_complete)
-        self.merge_worker.start()
-        
-    def handle_merge_complete(self, output_file):
-        # Stop loading animation
-        self.loading_movie.stop()
-        self.loading_label.setVisible(False)
-        
-        self.log_message(f"Merge completed successfully: {output_file}")
-        
-        # Ask if user wants to open the merged file
-        from PyQt6.QtWidgets import QMessageBox
-        reply = QMessageBox.question(
-            self, 'Merge Complete', 
-            f'Merge completed successfully!\nThe merged file has been saved as:\n{os.path.basename(output_file)}\n\nWould you like to open the merged file?',
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, 
-            QMessageBox.StandardButton.Yes
-        )
-        
-        if reply == QMessageBox.StandardButton.Yes:
-            # Open the file with the default application
-            import subprocess
-            import platform
-            
-            if platform.system() == 'Windows':
-                os.startfile(output_file)
-            elif platform.system() == 'Darwin':  # macOS
-                subprocess.call(('open', output_file))
-            else:  # Linux
-                subprocess.call(('xdg-open', output_file))
 
 #==========================================================main app==========================================================#
 
