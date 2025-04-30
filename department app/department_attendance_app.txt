@@ -21,8 +21,8 @@ from openpyxl.utils import get_column_letter
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QHeaderView, QGridLayout,
     QPushButton, QLabel, QLineEdit, QComboBox, QFileDialog, QSizePolicy, QCalendarWidget,
-    QFrame, QTableWidget, QTableWidgetItem, QProgressBar, QGraphicsDropShadowEffect,
-    QTextEdit, QDialog, QMessageBox, QScrollArea, QStackedWidget, QGroupBox, QRadioButton
+    QFrame, QTableWidget, QTableWidgetItem, QProgressBar, QGraphicsDropShadowEffect, QListWidget,
+    QTextEdit, QDialog, QMessageBox, QScrollArea, QStackedWidget, QGroupBox, QRadioButton, QAbstractItemView
 )
 from PyQt6.QtCore import Qt, pyqtSignal, QThread, QSize, QTimer, QObject, pyqtSignal, QEvent, QDate
 from PyQt6.QtGui import QIcon, QPixmap, QFont, QIntValidator, QColor, QMovie, QTextCursor, QPainter, QPainterPath, QPen, QPalette
@@ -318,23 +318,20 @@ class StartPage(QWidget):
         buttons_layout = QVBoxLayout(buttons_widget)
         buttons_layout.setSpacing(15)
         
-        # First row - 3 buttons side by side
+        # First row - 3 buttons side by side (original buttons)
         first_row = QHBoxLayout()
-        first_row.setSpacing(10)  # Set horizontal spacing between buttons
+        first_row.setSpacing(10)
         
-        # Reference File Preparer Button
         self.reference_btn = QPushButton("Prepare Reference File")
         self.reference_btn.setMinimumHeight(50)
         self.reference_btn.setStyleSheet(MENU_BUTTON_STYLE)
         first_row.addWidget(self.reference_btn)
         
-        # Prepare Log Sheet Button
         self.preparer_btn = QPushButton("Prepare Log Sheet")
         self.preparer_btn.setMinimumHeight(50)
         self.preparer_btn.setStyleSheet(MENU_BUTTON_STYLE)
         first_row.addWidget(self.preparer_btn)
         
-        # Schedule Manager Button
         self.schedule_btn = QPushButton("Manage Schedules")
         self.schedule_btn.setMinimumHeight(50)
         self.schedule_btn.setStyleSheet(MENU_BUTTON_STYLE)
@@ -342,31 +339,39 @@ class StartPage(QWidget):
         
         buttons_layout.addLayout(first_row)
         
-        # Second row - 2 buttons side by side
+        # Second row - 2 buttons side by side (process buttons)
         second_row = QHBoxLayout()
         second_row.setSpacing(10)
+
+        self.appeal_btn = QPushButton("Process Appeals")
+        self.appeal_btn.setMinimumHeight(50)
+        self.appeal_btn.setStyleSheet(MENU_BUTTON_STYLE)
+        second_row.addWidget(self.appeal_btn)
         
-        # Process Button
         self.process_btn = QPushButton("Process Attendance")
         self.process_btn.setMinimumHeight(50)
         self.process_btn.setStyleSheet(MENU_BUTTON_STYLE)
         second_row.addWidget(self.process_btn)
         
-        # Populate with Faculty Button
+        buttons_layout.addLayout(second_row)
+        
+        # Third row - 2 buttons side by side (populate and analyze)
+        third_row = QHBoxLayout()
+        third_row.setSpacing(10)
+        
         self.populate_btn = QPushButton("Populate Main File")
         self.populate_btn.setMinimumHeight(50)
         self.populate_btn.setStyleSheet(MENU_BUTTON_STYLE)
-        second_row.addWidget(self.populate_btn)
+        third_row.addWidget(self.populate_btn)
         
-        buttons_layout.addLayout(second_row)
-        
-        # Third row - Dashboard button (full width)
         self.dashboard_btn = QPushButton("Analyze Attendance")
         self.dashboard_btn.setMinimumHeight(50)
         self.dashboard_btn.setStyleSheet(MENU_BUTTON_STYLE)
-        buttons_layout.addWidget(self.dashboard_btn)
+        third_row.addWidget(self.dashboard_btn)
         
-        # Exit Button
+        buttons_layout.addLayout(third_row)
+        
+        # Exit Button (full width)
         exit_btn = QPushButton("Exit")
         exit_btn.setMinimumHeight(50)
         exit_btn.setStyleSheet(MENU_EXIT_BUTTON_STYLE)
@@ -484,16 +489,17 @@ class InfoPage(QWidget):
 
         # Create info label with rich text
         info_text = """
-        <h1 style='color: white; text-align: center;'>Department Attendance Management System</h1>
+        <h1 style='color: white; text-align: center;'>Faculty Attendance Management System</h1>
         
         <h2 style='color: white;'>Special Thanks</h2>
         <ul style='color: white;'>
             <li><b>Dr. Ahmad Samir</b> who encouraged me to start working on this project</li>
-            <li><b>Dr. Amani Helmi</b> who sponsored this project till it was launched successfully</li>
-            <li><b>Dr. Gehan</b> who supported me every step on the way</li>
-            <li><b>Dr. Doaa Abu Bakr</b> who was the catalyst to this project's success</li>
-            <li><b>Dr. Taqwa</b> who aided me with her efforts in implementing the project</li>
+            <li><b>Dr. Amani Helmi</b> for sponsoring this project and for bing the reason behind its success</li>
+            <li><b>Dr. Gehan Adel</b> for supporting me every step on the way</li>
+            <li><b>Dr. Doaa Mohammad Abu Bakr</b> who was the catalyst to this project's success</li>
+            <li><b>Dr. Taqwa Mohammad Abd Al-Salam</b> for aiding me with her efforts in deployment</li>
             <li>My companion and friend, <b>Dr. Mazin Helmi</b> who never got tired of me</li>
+
         </ul>
                 
         <h2 style='color: white;'>What This App Does</h2>
@@ -519,17 +525,21 @@ class InfoPage(QWidget):
                     <li>Update existing schedules when needed</li>
                 </ul>
             </li>
+            <li><b>Process Appeals</b>
+                <ul>
+                    <li>Manage attendance exceptions for students who missed regular logging</li>
+                    <li>Connect student information, attendance logs, and session schedules</li>
+                    <li>Select students and sessions for attendance appeals</li>
+                    <li>Process and add these appeals to attendance records</li>
+                </ul>
+            </li>
             <li><b>Process Attendance</b>
                 <ul>
                     <li>Compare student logs against official schedules</li>
-                    <li>Generate detailed attendance reports</li>
-                </ul>
-            </li>
-            <li><b>Populate Main File</b>
-                <ul>
-                    <li>Integrate department-specific attendance data into the main faculty attendance file</li>
-                    <li>Automatically match student IDs and session numbers</li>
-                    <li>Update attendance records for specific departments</li>
+                    <li>Track and validate attendance for students who have changed groups</li>
+                    <li>Identify when student transfers between groups occurred</li>
+                    <li>Validate attendance records against the appropriate group schedule</li>
+                    <li>Generate detailed attendance reports with transfer logs</li>
                 </ul>
             </li>
             <li><b>Analyze Attendance</b>
@@ -586,22 +596,63 @@ class InfoPage(QWidget):
             </li>
         </ul>
         
-        <h3 style='color: white;'>Step 4: Process Attendance</h3>
+        <h3 style='color: white;'>Step 4: Process Appeals</h3>
         <ul style='color: white;'>
-            <li>Click "Process Attendance" button on the main screen</li>
-            <li>Set up your data:
+            <li>Click "Process Appeals" button on the main screen</li>
+            <li>Set up your data sources:
                 <ul>
-                    <li>Select your reference file (student database)</li>
-                    <li>Select your attendance logs</li>
-                    <li>Add all relevant schedule files</li>
+                    <li>Select your reference data file with student information</li>
+                    <li>Select your existing attendance logs file</li>
+                    <li>Select your session schedules file</li>
                 </ul>
             </li>
+            <li>Managing appeals:
+                <ul>
+                    <li>Search for students by name or ID in the search box</li>
+                    <li>Select a student from the student table</li>
+                    <li>View student details in the details panel</li>
+                    <li>Select relevant sessions from the filtered sessions table</li>
+                    <li>Click "Add to Appeals" to create an appeal</li>
+                    <li>Review all selected appeals in the appeals management table</li>
+                    <li>Remove any unneeded appeals if necessary</li>
+                    <li>Click "Process Appeals" to finalize and save the changes</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3 style='color: white;'>Step 5: Process Attendance</h3>
+        <ul style='color: white;'>
+            <li>Click "Process Attendance" button on the main screen</li>
+                <ul>
+            <li>For generating the attendance reports:
+<ul>
+                    <li>Select your reference file</li>
+                    <li>Select your attendance logs</li>
+                    <li>Add all relevant schedule files</li>
+</ul>
+
+            </li>
+
             <li>Click "Process Attendance Records" to start</li>
             <li>Wait for the system to finish processing</li>
             <li>Find your reports in the "attendance_reports" folder</li>
+                </ul>
+                <ul>
+            <li>For updating previous reports in case some students transferred between groups:
+<ul>
+                    <li>Select the previous report</li>
+                    <li>Select your NEW reference file</li>
+                    <li>Select your attendance logs</li>
+                    <li>Add all relevant schedule files</li> 
+</ul>
+            </li>
+            <li>Click "Update Report" to start</li>
+            <li>Wait for the system to finish updating</li>
+            <li>Find your updated reports in the "attendance_reports" folder</li>
+                </ul>
         </ul>
         
-        <h3 style='color: white;'>Step 5: Populate Main File</h3>
+        <h3 style='color: white;'>Step 6: Populate Main File</h3>
         <ul style='color: white;'>
             <li>Click "Populate Main File" button on the main screen</li>
             <li>Select your department:
@@ -628,8 +679,8 @@ class InfoPage(QWidget):
             <li>Check the output console for progress updates and details</li>
             <li>A success message will appear when the process is complete</li>
         </ul>
-        
-        <h3 style='color: white;'>Step 6: Analyze Attendance</h3>
+
+        <h3 style='color: white;'>Step 7: Analyze Attendance</h3>
         <ul style='color: white;'>
             <li>Click "Analyze Attendance" button on the main screen</li>
             <li>Select your processed attendance report file from the previous step</li>
@@ -649,11 +700,16 @@ class InfoPage(QWidget):
             <li>Keep your files organized in dedicated folders</li>
             <li>Process attendance weekly to stay up-to-date</li>
             <li>Use consistent naming for all your files</li>
-            <li>When using the Populate Main File feature:
+            <li>When validating attendance, be aware that different time windows are used:
                 <ul>
-                    <li>Make sure your department file has "Attendance" and "Summary" sheets</li>
-                    <li>Ensure student IDs are formatted consistently across files</li>
-                    <li>Department columns in the main file should include the department name and session number</li>
+                    <li>Standard sessions: 15 minutes before to 150 minutes after session start</li>
+                    <li>Exception hours (12, 1, 13, 3, 15): 15 minutes before to 150 minutes after</li>
+                </ul>
+            </li>
+            <li>For students who transferred between groups, the system will:
+                <ul>
+                    <li>Analyze attendance patterns to identify when transfers occurred</li>
+                    <li>Validate attendance against the appropriate group schedule based on transfer dates</li>
                 </ul>
             </li>
         </ul>
@@ -672,13 +728,6 @@ class InfoPage(QWidget):
                     <li>Check that student IDs are consistent across files</li>
                     <li>Look for typos in names or IDs</li>
                     <li>Make sure date formats are the same in all files</li>
-                </ul>
-            </li>
-            <li>If department columns are not detected during population:
-                <ul>
-                    <li>Verify the department name appears in column headers</li>
-                    <li>Make sure session numbers are included in the header</li>
-                    <li>Check the department patterns in the search settings</li>
                 </ul>
             </li>
             <li>If the app crashes:
@@ -2978,7 +3027,7 @@ class ScheduleManager(QWidget):
             ws.title = module_name[:31]
         
             # Add headers in row 1 (no module name row anymore)
-            headers = ['Year', 'Group', 'Subject', 'Session', 'Location', 'Date', 'Start Time']
+            headers = ['Year', 'Group', 'Session', 'Location', 'Date', 'Start Time']
             for col, header in enumerate(headers, start=1):
                 ws.cell(row=1, column=col).value = header
                 ws.cell(row=1, column=col).font = openpyxl.styles.Font(bold=True)
@@ -3055,7 +3104,7 @@ class ScheduleManager(QWidget):
             ws.title = module_name[:31]
         
             # Add headers in row 1 (no module name row anymore)
-            headers = ['Year', 'Group', 'Subject', 'Session', 'Location', 'Date', 'Start Time']
+            headers = ['Year', 'Group', 'Session', 'Location', 'Date', 'Start Time']
             for col, header in enumerate(headers, start=1):
                 ws.cell(row=1, column=col).value = header
                 ws.cell(row=1, column=col).font = openpyxl.styles.Font(bold=True)
@@ -3144,12 +3193,15 @@ class ScheduleManager(QWidget):
         msg_box.setStyleSheet("QLabel{min-width: 300px;}")
         msg_box.exec()
 
-#==========================================================attendance processors==========================================================#
+#==========================================================appeal processor==========================================================#
 
-class AttendanceProcessor(QWidget):
+class AppealProcessor(QWidget):
     def __init__(self):
         super().__init__()
         self.schedules = []
+        self.students = []
+        self.sessions = []
+        self.selected_appeals = []
         self.setStyleSheet("""
             background-color: black; 
             color: white;
@@ -3157,7 +3209,7 @@ class AttendanceProcessor(QWidget):
                 color: white;
             }
         """)
-        
+
         self.init_ui()
 
     def return_to_home(self):
@@ -3171,16 +3223,27 @@ class AttendanceProcessor(QWidget):
         main_layout = QVBoxLayout(self)
         main_layout.setSpacing(20)
         main_layout.setContentsMargins(20, 20, 20, 20)
+        
+        # Create a scroll area to make the page scrollable
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setStyleSheet("QScrollArea { border: none; }")
+        
+        # Create a widget to hold the content
+        scroll_content = QWidget()
+        scroll_layout = QVBoxLayout(scroll_content)
+        scroll_layout.setSpacing(20)
+        scroll_layout.setContentsMargins(0, 0, 0, 0)
 
         # Header layout
         header_layout = QHBoxLayout()
         logo_label = QLabel()
         logo_path = os.path.join(os.path.dirname(__file__), 'ASU1.png')
         if os.path.exists(logo_path):
-            pixmap = QPixmap(logo_path).scaled(60, 60, Qt.AspectRatioMode.KeepAspectRatio, 
-                                             Qt.TransformationMode.SmoothTransformation)
+            pixmap = QPixmap(logo_path).scaled(60, 60, Qt.AspectRatioMode.KeepAspectRatio,
+                                               Qt.TransformationMode.SmoothTransformation)
             logo_label.setPixmap(pixmap)
-        title_label = QLabel("Attendance Processor")
+        title_label = QLabel("Appeal Processor")
         title_label.setStyleSheet(f"font-size: 24px; font-weight: bold;")
         header_layout.addWidget(logo_label)
         header_layout.addWidget(title_label)
@@ -3189,32 +3252,35 @@ class AttendanceProcessor(QWidget):
         # Create vertical layout for header buttons
         header_buttons_layout = QVBoxLayout()
         header_buttons_layout.setSpacing(5)
-        
+
         # Back button
         back_btn = QPushButton("Back to Home")
         back_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
         back_btn.clicked.connect(self.return_to_home)
-        
+
         # Exit button
         exit_btn = QPushButton("Exit")
         exit_btn.setStyleSheet(EXIT_BUTTON_STYLE)
         exit_btn.clicked.connect(QApplication.instance().quit)
-        
+
         # Add buttons to vertical layout
         header_buttons_layout.addWidget(back_btn)
         header_buttons_layout.addWidget(exit_btn)
         header_buttons_layout.addStretch()
-        
+
         # Add button layout to header
         header_layout.addStretch()
         header_layout.addLayout(header_buttons_layout)
-        main_layout.addLayout(header_layout)
+        scroll_layout.addLayout(header_layout)
 
-        # Reference Data Section
+        # Create three file input sections
+        # REORDERED AS REQUESTED:
+        
+        # 1. Reference File Section
         ref_group = QGroupBox("Reference Data")
         ref_group.setStyleSheet(GROUP_BOX_STYLE)
         ref_layout = QVBoxLayout(ref_group)
-        
+
         # Single line layout for reference data
         ref_input_layout = QHBoxLayout()
         ref_input_layout.addWidget(QLabel("Database File:"))
@@ -3229,15 +3295,16 @@ class AttendanceProcessor(QWidget):
         self.ref_sheet_combo = QComboBox()
         self.ref_sheet_combo.setMinimumWidth(100)
         ref_input_layout.addWidget(self.ref_sheet_combo)
-        ref_browse_btn.clicked.connect(lambda: self.browse_file(self.ref_file_input))
+        ref_browse_btn.clicked.connect(
+            lambda: self.browse_file(self.ref_file_input))
         ref_layout.addLayout(ref_input_layout)
-        main_layout.addWidget(ref_group)
-
-        # Attendance Logs Section
+        scroll_layout.addWidget(ref_group)
+        
+        # 2. Log File Section
         log_group = QGroupBox("Attendance Logs")
         log_group.setStyleSheet(GROUP_BOX_STYLE)
         log_layout = QVBoxLayout(log_group)
-        
+
         # Single line layout for log data
         log_input_layout = QHBoxLayout()
         log_input_layout.addWidget(QLabel("Log File:"))
@@ -3252,31 +3319,849 @@ class AttendanceProcessor(QWidget):
         self.log_sheet_combo = QComboBox()
         self.log_sheet_combo.setMinimumWidth(100)
         log_input_layout.addWidget(self.log_sheet_combo)
-        log_browse_btn.clicked.connect(lambda: self.browse_file(self.log_file_input))
+        log_browse_btn.clicked.connect(
+            lambda: self.browse_file(self.log_file_input))
         log_layout.addLayout(log_input_layout)
-        main_layout.addWidget(log_group)
-
-        # Session Schedules Section
-        schedule_group = QGroupBox("Session Schedules")
+        scroll_layout.addWidget(log_group)
+        
+        # 3. Schedule File Section
+        schedule_group = QGroupBox("Sessions Schedules")
         schedule_group.setStyleSheet(GROUP_BOX_STYLE)
         schedule_layout = QVBoxLayout(schedule_group)
+
+        # Single line layout for schedule data
+        schedule_input_layout = QHBoxLayout()
+        schedule_input_layout.addWidget(QLabel("Schedule File:"))
+        self.schedule_file_input = QLineEdit()
+        self.schedule_file_input.setPlaceholderText("Select Excel file...")
+        self.schedule_file_input.setMinimumWidth(200)
+        schedule_input_layout.addWidget(self.schedule_file_input)
+        schedule_browse_btn = QPushButton("Browse")
+        schedule_browse_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        schedule_input_layout.addWidget(schedule_browse_btn)
+        schedule_input_layout.addWidget(QLabel("Sheet Name:"))
+        self.schedule_sheet_combo = QComboBox()
+        self.schedule_sheet_combo.setMinimumWidth(100)
+        schedule_input_layout.addWidget(self.schedule_sheet_combo)
+        schedule_browse_btn.clicked.connect(
+            lambda: self.browse_file(self.schedule_file_input))
+        schedule_layout.addLayout(schedule_input_layout)
+        scroll_layout.addWidget(schedule_group)
+
+        # Appeal Selection Section
+        appeal_group = QGroupBox("Appeal Selection")
+        appeal_group.setStyleSheet(GROUP_BOX_STYLE)
+        appeal_layout = QVBoxLayout(appeal_group)
+        appeal_group.setMinimumHeight(500)  # Increase height
+
+
+        # Student search section
+        student_search_layout = QHBoxLayout()
+        student_search_layout.addWidget(QLabel("Search Student:"))
+        self.student_search = QLineEdit()
+        self.student_search.setPlaceholderText("Enter student ID or name...")
+        self.student_search.setMinimumWidth(300)
+        self.student_search.textChanged.connect(self.filter_students)
+        student_search_layout.addWidget(self.student_search)
         
+        # CHANGED: Replace student list with table
+        self.student_table = QTableWidget()
+        self.student_table.setColumnCount(4)
+        self.student_table.setHorizontalHeaderLabels(['Student ID', 'Name', 'Year', 'Group'])
+        self.student_table.setStyleSheet(TABLE_STYLE)
+        # Center align the header text
+        header = self.student_table.horizontalHeader()
+        header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
+        # Set column resize modes to stretch
+        for i in range(4):
+            header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+        self.student_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.student_table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.student_table.itemSelectionChanged.connect(self.update_student_info)
+        
+        # Session selection section
+        session_title = QLabel("Select the sessions which the students should have attended:")
+        session_title.setStyleSheet("font-weight: bold; margin-top: 10px;")
+        
+        # CHANGED: Replace session list with table
+        self.session_table = QTableWidget()
+        self.session_table.setColumnCount(4)
+        self.session_table.setHorizontalHeaderLabels([
+            'Session', 'Location', 'Date', 'Time'
+        ])
+        self.session_table.setStyleSheet(TABLE_STYLE)
+        # Center align the header text
+        header = self.session_table.horizontalHeader()
+        header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
+        # Set column resize modes to stretch
+        for i in range(5):
+            header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+        self.session_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.session_table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.session_table.setMinimumHeight(150)  # Make it taller
+        self.session_table.itemSelectionChanged.connect(self.update_session_info)
+  
+        # Add appeal button
+        add_appeal_layout = QHBoxLayout()
+        add_appeal_btn = QPushButton("Add to Appeals")
+        add_appeal_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        add_appeal_btn.clicked.connect(self.add_appeal)
+        add_appeal_layout.addStretch()
+        add_appeal_layout.addWidget(add_appeal_btn)
+        
+        appeal_layout.addLayout(student_search_layout)
+        appeal_layout.addWidget(self.student_table)
+        appeal_layout.addWidget(session_title)
+        appeal_layout.addWidget(self.session_table)
+        appeal_layout.addLayout(add_appeal_layout)
+        
+        scroll_layout.addWidget(appeal_group)
+
+        # Selected Appeals Table
+        selected_appeals_group = QGroupBox("Selected Appeals")
+        selected_appeals_group.setStyleSheet(GROUP_BOX_STYLE)
+        selected_appeals_group.setMinimumHeight(300)  # Increase height
+        selected_appeals_layout = QVBoxLayout(selected_appeals_group)
+
+        self.appeals_table = QTableWidget()
+        self.appeals_table.setColumnCount(8)
+        self.appeals_table.setHorizontalHeaderLabels([
+            'Student ID', 'Name', 'Year', 'Group', 'Session', 'Location', 'Date', 'Time'
+        ])
+        self.appeals_table.setStyleSheet(TABLE_STYLE)
+
+        # Center align the header text
+        header = self.appeals_table.horizontalHeader()
+        header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)  # Center header text
+
+        # Set column resize modes to stretch and fit content
+        for i in range(9):
+            header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+
+        selected_appeals_layout.addWidget(self.appeals_table)
+        
+        # Remove appeal button
+        remove_appeal_layout = QHBoxLayout()
+        remove_appeal_btn = QPushButton("Remove Selected Appeal")
+        remove_appeal_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        remove_appeal_btn.clicked.connect(self.remove_appeal)
+        remove_appeal_layout.addStretch()
+        remove_appeal_layout.addWidget(remove_appeal_btn)
+        selected_appeals_layout.addLayout(remove_appeal_layout)
+        
+        scroll_layout.addWidget(selected_appeals_group)
+
+        # Bottom Buttons
+        button_layout = QHBoxLayout()
+        process_btn = QPushButton("Process Appeals")
+        process_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        process_btn.clicked.connect(self.process_appeals)
+        button_layout.addWidget(process_btn)
+        scroll_layout.addLayout(button_layout)
+
+        # Connect file input changes to sheet loading AND data loading (autoload)
+        self.ref_file_input.textChanged.connect(lambda: self.load_sheets_and_data(self.ref_file_input.text(), self.ref_sheet_combo, 'reference'))
+        self.log_file_input.textChanged.connect(lambda: self.load_sheets_and_data(self.log_file_input.text(), self.log_sheet_combo, 'log'))
+        self.schedule_file_input.textChanged.connect(lambda: self.load_sheets_and_data(self.schedule_file_input.text(), self.schedule_sheet_combo, 'schedule'))
+        
+        # Also connect sheet combo box changes to trigger data loading when changed
+        self.ref_sheet_combo.currentIndexChanged.connect(lambda: self.autoload_data())
+        self.log_sheet_combo.currentIndexChanged.connect(lambda: self.autoload_data())
+        self.schedule_sheet_combo.currentIndexChanged.connect(lambda: self.autoload_data())
+            
+        # Set the scroll content and add to main layout
+        scroll_area.setWidget(scroll_content)
+        main_layout.addWidget(scroll_area)
+
+    def browse_file(self, input_field):
+        filename, _ = QFileDialog.getOpenFileName(
+            self, "Select Excel File", "", "Excel Files (*.xlsx)")
+        if filename:
+            input_field.setText(filename)
+
+    def load_sheets_and_data(self, file_path, combo_box, file_type):
+        if os.path.isfile(file_path):
+            try:
+                wb = openpyxl.load_workbook(file_path, read_only=True)
+                
+                # Store current selection if exists
+                current_selection = combo_box.currentText()
+                
+                # Update combo box
+                combo_box.clear()
+                combo_box.addItems(wb.sheetnames)
+                
+                # Restore selection if possible
+                if current_selection in wb.sheetnames:
+                    combo_box.setCurrentText(current_selection)
+                    
+                # Auto-load data after sheets are loaded
+                self.autoload_data()
+                
+            except Exception as e:
+                QMessageBox.critical(
+                    self, "Error", f"Error loading workbook: {str(e)}")
+
+    def autoload_data(self):
+        """Automatically load data when files and sheets are selected"""
+        # Check if all required files and sheets are selected
+        if (self.ref_file_input.text() and self.ref_sheet_combo.currentText() and 
+            self.schedule_file_input.text() and self.schedule_sheet_combo.currentText()):
+            self.load_data()
+    
+    def load_data(self):
+        """Load student and session data from the selected files"""
+        try:
+            # Clear previous data
+            self.students = []
+            self.sessions = []
+            self.student_table.setRowCount(0)
+            self.session_table.setRowCount(0)
+
+            # Load student reference data
+            ref_wb = openpyxl.load_workbook(self.ref_file_input.text(), read_only=True)
+            ref_ws = ref_wb[self.ref_sheet_combo.currentText()]
+            student_db = list(ref_ws.values)
+
+            # Skip header row and load students
+            for row in student_db[1:]:
+                if row[0]:  # If student ID exists
+                    student = {
+                        'id': str(row[0]),
+                        'name': row[1],
+                        'year': row[2],
+                        'group': row[3]                    }
+                    self.students.append(student)
+        
+                    # Add to student table
+                    current_row = self.student_table.rowCount()
+                    self.student_table.insertRow(current_row)
+        
+                    # Add data to table cells
+                    self.student_table.setItem(current_row, 0, QTableWidgetItem(str(student['id'])))
+                    self.student_table.setItem(current_row, 1, QTableWidgetItem(student['name']))
+                    self.student_table.setItem(current_row, 2, QTableWidgetItem(str(student['year'])))
+                    self.student_table.setItem(current_row, 3, QTableWidgetItem(str(student['group'])))
+        
+                    # Center align all items
+                    for col in range(4):
+                        item = self.student_table.item(current_row, col)
+                        item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+            # Load session schedule data
+            sched_wb = openpyxl.load_workbook(self.schedule_file_input.text(), read_only=True)
+            sched_ws = sched_wb[self.schedule_sheet_combo.currentText()]
+            session_schedule = list(sched_ws.values)
+
+            # Debug - print headers to understand format
+            print(f"Schedule headers: {session_schedule[0] if session_schedule else 'No data'}")
+
+            # Skip header row and load sessions
+            for row_idx, row in enumerate(session_schedule):
+                # Skip the header row (index 0)
+                if row_idx == 0:
+                    continue
+                    
+                # Make sure we have all required data in the row
+                if len(row) >= 6:
+                    # Extract session data based on the new format (like in the image)
+                    year = row[0]  # Year column
+                    group = row[1]  # Group column
+                    session_num = row[2]  # Session column
+                    location = row[3]  # Location column
+                    date = row[4]  # Date column
+                    start_time = row[5]  # Start Time column
+                    
+                    # Create a session dictionary with the extracted data
+                    session = {
+                        'year': year,
+                        'group': group,
+                        'session': session_num,
+                        'location': location,
+                        'date': date,
+                        'start_time': start_time
+                    }
+                    
+                    # Add to sessions list
+                    self.sessions.append(session)
+                    
+                    # Debug - print each session
+                    print(f"Added session: {session}")
+        
+            # Debug print
+            print(f"Loaded {len(self.students)} students and {len(self.sessions)} sessions")
+            if self.sessions:
+                print(f"Sample session: {self.sessions[0]}")
+
+        except Exception as e:
+            self.show_custom_warning("Error", f"Error loading data: {str(e)}")
+            import traceback
+            traceback.print_exc()  # Print full stack trace for debugging
+    
+    def filter_students(self):
+        """Filter student table based on search text"""
+        search_text = self.student_search.text().lower()
+        self.student_table.setRowCount(0)
+    
+        for student in self.students:
+            # Filter students by ID or name
+            if not search_text or search_text in student['id'].lower() or search_text in student['name'].lower():
+                current_row = self.student_table.rowCount()
+                self.student_table.insertRow(current_row)
+            
+                # Add data to table cells
+                self.student_table.setItem(current_row, 0, QTableWidgetItem(str(student['id'])))
+                self.student_table.setItem(current_row, 1, QTableWidgetItem(student['name']))
+                self.student_table.setItem(current_row, 2, QTableWidgetItem(str(student['year'])))
+                self.student_table.setItem(current_row, 3, QTableWidgetItem(str(student['group'])))
+            
+                # Center align all items
+                for col in range(4):
+                    item = self.student_table.item(current_row, col)
+                    item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+    def update_student_info(self):
+        """Update the student information based on selection"""
+        # Get the selected row
+        selected_rows = self.student_table.selectionModel().selectedRows()
+        if not selected_rows:
+            return
+
+        row = selected_rows[0].row()
+
+        # Extract student ID from the selected row
+        student_id = self.student_table.item(row, 0).text()
+
+        # Find the selected student
+        selected_student = None
+        for student in self.students:
+            if student['id'] == student_id:
+                selected_student = student
+                break
+
+        if selected_student:
+            # Update UI labels
+            self.student_id_label.setText(selected_student['id'])
+            self.student_name_label.setText(selected_student['name'])
+            self.student_year_label.setText(str(selected_student['year']))
+            self.student_group_label.setText(str(selected_student['group']))
+
+            # Update session table to show applicable sessions
+            self.session_table.setRowCount(0)
+            self.applicable_sessions = []  # Store as an instance variable to access later
+
+            # Convert student year and group values for proper comparison
+            student_year = str(selected_student['year']).strip().lower()
+            student_group = str(selected_student['group']).strip().lower()
+            
+            # If student year doesn't start with "year", add it for comparison
+            if not student_year.startswith("year"):
+                student_year = f"year {student_year}"
+                
+            print(f"Looking for sessions for student year: {student_year}, group: {student_group}")
+            print(f"Total available sessions: {len(self.sessions)}")
+            
+            # Loop through all sessions to find matching ones
+            for session in self.sessions:
+                # Convert session year and group for comparison
+                session_year = str(session['year']).strip().lower()
+                session_group = str(session['group']).strip().lower()
+                
+                print(f"Comparing with session - year: {session_year}, group: {session_group}")
+                
+                # Check if this session is for the student's year and group
+                if (session_year == student_year and session_group == student_group):
+                    print(f"MATCH FOUND: {session}")
+                    self.applicable_sessions.append(session)
+                    
+                    # Format date and time for display
+                    date_str = str(session['date'])
+                    time_str = str(session['start_time'])
+                    
+                    # Add to session table
+                    current_row = self.session_table.rowCount()
+                    self.session_table.insertRow(current_row)
+                    
+                    # Add data to table cells
+                    self.session_table.setItem(current_row, 0, QTableWidgetItem(str(session['session'])))
+                    self.session_table.setItem(current_row, 1, QTableWidgetItem(str(session['location'])))
+                    self.session_table.setItem(current_row, 2, QTableWidgetItem(date_str))
+                    self.session_table.setItem(current_row, 3, QTableWidgetItem(time_str))
+                    
+                    # Center align all items
+                    for col in range(4):
+                        if col < self.session_table.columnCount():
+                            item = self.session_table.item(current_row, col)
+                            if item:
+                                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            
+            print(f"Found {len(self.applicable_sessions)} applicable sessions for this student")
+            
+    def update_session_info(self):
+        """Store the selected session to be used when adding an appeal"""
+        self.selected_session = None
+    
+        # Get the selected row
+        selected_rows = self.session_table.selectionModel().selectedRows()
+        if not selected_rows:
+            return
+        
+        selected_index = selected_rows[0].row()
+    
+        if selected_index >= 0 and hasattr(self, 'applicable_sessions') and selected_index < len(self.applicable_sessions):
+            self.selected_session = self.applicable_sessions[selected_index]
+            print(f"Selected session: {self.selected_session}")
+    
+    def add_appeal(self):
+        """Add selected student and session to the appeals table"""
+        # Check if student is selected
+        student_rows = self.student_table.selectionModel().selectedRows()
+        if not student_rows:
+            self.show_custom_warning("Selection Required", "Please select a student.")
+            return
+        
+        # Check if session is selected
+        session_rows = self.session_table.selectionModel().selectedRows()
+        if not session_rows:
+            self.show_custom_warning("Selection Required", "Please select a session.")
+            return
+        
+        # Update session info to ensure we have the latest selection
+        self.update_session_info()
+    
+        if not hasattr(self, 'selected_session') or not self.selected_session:
+            self.show_custom_warning("Selection Required", "Please select a valid session.")
+            return
+        
+        # Get student info
+        student_row = student_rows[0].row()
+        student_id = self.student_table.item(student_row, 0).text()
+    
+        selected_student = None
+        for student in self.students:
+            if student['id'] == student_id:
+                selected_student = student
+                break
+    
+        if not selected_student:
+            return
+        
+        # Create appeal record
+        appeal = {
+            'student_id': selected_student['id'],
+            'name': selected_student['name'],
+            'year': selected_student['year'],
+            'group': selected_student['group'],
+            'session': self.selected_session['session'],
+            'location': self.selected_session['location'],
+            'date': self.selected_session['date'],
+            'time': self.selected_session['start_time']
+        }
+    
+        # Check if this appeal already exists
+        for existing_appeal in self.selected_appeals:
+            if (existing_appeal['student_id'] == appeal['student_id'] and
+                existing_appeal['session'] == appeal['session'] and
+                existing_appeal['date'] == appeal['date']):
+                self.show_custom_warning("Duplicate Appeal", 
+                                        f"This appeal for {selected_student['name']} already exists.")
+                return
+    
+        # Add to list and update table
+        self.selected_appeals.append(appeal)
+        self.update_appeals_table()
+    
+    def remove_appeal(self):
+        """Remove selected appeal from the table"""
+        current_row = self.appeals_table.currentRow()
+        if current_row >= 0:
+            removed_appeal = self.selected_appeals.pop(current_row)
+            self.update_appeals_table()
+        else:
+            self.show_custom_warning("Selection Required", "Please select an appeal to remove.")
+    
+    def update_appeals_table(self):
+        """Update the appeals table with current selections"""
+        self.appeals_table.setRowCount(len(self.selected_appeals))
+        
+        for i, appeal in enumerate(self.selected_appeals):
+            # Format date and time properly
+            date_str = appeal['date']
+            time_str = appeal['time']
+            
+            if isinstance(appeal['date'], datetime):
+                date_str = appeal['date'].strftime('%d/%m/%Y')
+            if isinstance(appeal['time'], datetime):
+                time_str = appeal['time'].strftime('%H:%M:%S')
+                
+            # Create table items
+            items = [
+                appeal['student_id'],
+                appeal['name'],
+                str(appeal['year']),
+                str(appeal['group']),
+                str(appeal['session']),
+                appeal['location'],
+                str(date_str),
+                str(time_str)
+            ]
+            
+            for j, value in enumerate(items):
+                item = QTableWidgetItem(str(value))
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                self.appeals_table.setItem(i, j, item)
+
+    def show_custom_warning(self, title, message):
+        """Display a custom warning message box"""
+        warning_dialog = QMessageBox(self)
+        warning_dialog.setWindowTitle(title)
+        warning_dialog.setText(message)
+        warning_dialog.setIcon(QMessageBox.Icon.Warning)
+        
+        # Style OK button
+        ok_button = warning_dialog.addButton(QMessageBox.StandardButton.Ok)
+        ok_button.setStyleSheet(STANDARD_BUTTON_STYLE)
+        
+        # Style dialog background
+        warning_dialog.setStyleSheet(f"""
+            QMessageBox {{
+                background-color: black;
+            }}
+            QLabel {{
+                color: white;
+                font-size: 14px;
+            }}
+        """)
+        
+        warning_dialog.exec()
+
+    def validate_inputs(self):
+        """Validates that all necessary inputs are provided before processing appeals"""
+        if not self.log_file_input.text() or not os.path.isfile(self.log_file_input.text()):
+            self.show_custom_warning("Missing Input", "Please select a valid log file.")
+            return False
+            
+        if not self.log_sheet_combo.currentText():
+            self.show_custom_warning("Missing Input", "Please select a log sheet.")
+            return False
+            
+        if not self.ref_file_input.text() or not os.path.isfile(self.ref_file_input.text()):
+            self.show_custom_warning("Missing Input", "Please select a valid student reference file.")
+            return False
+            
+        if not self.schedule_file_input.text() or not os.path.isfile(self.schedule_file_input.text()):
+            self.show_custom_warning("Missing Input", "Please select a valid schedule file.")
+            return False
+            
+        return True
+        
+    def process_appeals(self):
+        """Process the selected appeals and add them to the log file"""
+        if not self.selected_appeals:
+            self.show_custom_warning("No Appeals", "Please add at least one appeal to process.")
+            return
+        
+        if not self.validate_inputs():
+            return
+        
+        try:
+            # Directly process appeals without using a thread
+            log_file = self.log_file_input.text()
+            log_sheet = self.log_sheet_combo.currentText()
+        
+            # Load existing log file
+            log_wb = openpyxl.load_workbook(log_file)
+            log_ws = log_wb[log_sheet]
+        
+            # Get header row to understand column structure
+            header_row = [cell.value if cell.value is not None else "" for cell in log_ws[1]]
+        
+            # Find important column indices
+            try:
+                # Adjust for the different column names in the example
+                id_col = header_row.index("Student ID")
+                location_col = header_row.index("Location")
+                date_col = header_row.index("Log Date")
+                time_col = header_row.index("Log Time")
+            
+                # Add missing columns if needed
+                
+                if "Session" not in header_row:
+                    header_row.append("Session")
+                    session_col = len(header_row) - 1
+                    for row in range(1, log_ws.max_row + 1):
+                        log_ws.cell(row=row, column=session_col+1).value = ""
+                else:
+                    session_col = header_row.index("Session")
+                
+                if "Status" not in header_row:
+                    header_row.append("Status")
+                    status_col = len(header_row) - 1
+                    for row in range(1, log_ws.max_row + 1):
+                        log_ws.cell(row=row, column=status_col+1).value = ""
+                else:
+                    status_col = header_row.index("Status")
+                
+                if "Notes" not in header_row:
+                    header_row.append("Notes")
+                    notes_col = len(header_row) - 1
+                    for row in range(1, log_ws.max_row + 1):
+                        log_ws.cell(row=row, column=notes_col+1).value = ""
+                else:
+                    notes_col = header_row.index("Notes")
+            
+            except ValueError as e:
+                # Proper header not found, raise error
+                raise ValueError(f"Required column not found in log file: {str(e)}")
+        
+            # Get total number of rows in the log sheet
+            max_row = log_ws.max_row
+        
+            # Process each appeal
+            for appeal in self.selected_appeals:
+                # Format date and time values for consistency
+                date_value = appeal['date']
+                time_value = appeal['time']
+            
+                if isinstance(date_value, datetime):
+                    date_value = date_value.strftime('%Y-%m-%d')
+                if isinstance(time_value, datetime):
+                    time_value = time_value.strftime('%H:%M:%S')
+            
+                # Prepare new row with appeal data
+                new_row = max_row + 1
+                log_ws.cell(row=new_row, column=id_col+1).value = appeal['student_id']
+                log_ws.cell(row=new_row, column=date_col+1).value = date_value
+                log_ws.cell(row=new_row, column=time_col+1).value = time_value
+                log_ws.cell(row=new_row, column=session_col+1).value = appeal['session']
+                log_ws.cell(row=new_row, column=status_col+1).value = "Present"  # Mark as present for approved appeals
+                log_ws.cell(row=new_row, column=location_col+1).value = appeal['location']
+                log_ws.cell(row=new_row, column=notes_col+1).value = "exception"  # Add exception flag as requested
+            
+                # Increment row counter
+                max_row += 1
+        
+            # Save changes to the log file
+            log_wb.save(log_file)
+        
+            # Show success message
+            success_dialog = QMessageBox(self)
+            success_dialog.setWindowTitle("Success")
+            success_dialog.setText(
+                "Appeals have been successfully processed and added to the log file.")
+            success_dialog.setIcon(QMessageBox.Icon.Information)
+
+            # Style OK button
+            ok_button = success_dialog.addButton(QMessageBox.StandardButton.Ok)
+            ok_button.setStyleSheet(STANDARD_BUTTON_STYLE)
+
+            # Style dialog background
+            success_dialog.setStyleSheet(f"""
+                QMessageBox {{
+                    background-color: {CARD_BG};
+                    }}
+                QLabel {{
+                    color: {TEXT_COLOR};
+                    font-size: 14px;
+                }}
+            """)
+
+            success_dialog.exec()
+        except Exception as e:
+            # Handle any errors that occur during processing
+            error_dialog = QMessageBox(self)
+            error_dialog.setWindowTitle("Error")
+            error_dialog.setText(f"Error processing appeals: {str(e)}")
+            error_dialog.setIcon(QMessageBox.Icon.Critical)
+            error_dialog.setStyleSheet(f"""
+                QMessageBox {{
+                    background-color: {CARD_BG};
+                    }}
+                QLabel {{
+                    color: {TEXT_COLOR};
+                    font-size: 14px;
+                }}
+            """)
+            error_dialog.exec()
+
+#==========================================================attendance processors==========================================================#
+
+class AttendanceProcessor(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.schedules = []
+        self.setStyleSheet("""
+            background-color: black; 
+            color: white;
+            QLabel {
+                color: white;
+            }
+        """)
+
+        self.init_ui()
+
+    def return_to_home(self):
+        # Get the stacked widget and switch to the start page
+        stacked_widget = self.parent()
+        if isinstance(stacked_widget, QStackedWidget):
+            stacked_widget.setCurrentIndex(0)
+
+    def init_ui(self):
+        # Main layout
+        main_layout = QVBoxLayout(self)
+        main_layout.setSpacing(20)
+        main_layout.setContentsMargins(20, 20, 20, 20)
+        
+        # Create a scroll area to make the page scrollable
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setStyleSheet("QScrollArea { border: none; }")
+        
+        # Create a widget to hold the content
+        scroll_content = QWidget()
+        scroll_layout = QVBoxLayout(scroll_content)
+        scroll_layout.setSpacing(20)
+        scroll_layout.setContentsMargins(0, 0, 0, 0)
+
+        # Header layout
+        header_layout = QHBoxLayout()
+        logo_label = QLabel()
+        logo_path = os.path.join(os.path.dirname(__file__), 'ASU1.png')
+        if os.path.exists(logo_path):
+            pixmap = QPixmap(logo_path).scaled(60, 60, Qt.AspectRatioMode.KeepAspectRatio,
+                                               Qt.TransformationMode.SmoothTransformation)
+            logo_label.setPixmap(pixmap)
+        title_label = QLabel("Attendance Processor")
+        title_label.setStyleSheet(f"font-size: 24px; font-weight: bold;")
+        header_layout.addWidget(logo_label)
+        header_layout.addWidget(title_label)
+        header_layout.addStretch()
+
+        # Create vertical layout for header buttons
+        header_buttons_layout = QVBoxLayout()
+        header_buttons_layout.setSpacing(5)
+
+        # Back button
+        back_btn = QPushButton("Back to Home")
+        back_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        back_btn.clicked.connect(self.return_to_home)
+
+        # Exit button
+        exit_btn = QPushButton("Exit")
+        exit_btn.setStyleSheet(EXIT_BUTTON_STYLE)
+        exit_btn.clicked.connect(QApplication.instance().quit)
+
+        # Add buttons to vertical layout
+        header_buttons_layout.addWidget(back_btn)
+        header_buttons_layout.addWidget(exit_btn)
+        header_buttons_layout.addStretch()
+
+        # Add button layout to header
+        header_layout.addStretch()
+        header_layout.addLayout(header_buttons_layout)
+        scroll_layout.addLayout(header_layout)
+
+        # Previous Reports Section - NEW
+        prev_reports_group = QGroupBox("Previous Reports (Optional)")
+        prev_reports_group.setStyleSheet(GROUP_BOX_STYLE)
+        prev_reports_layout = QVBoxLayout(prev_reports_group)
+
+        # Single line layout for previous reports
+        prev_reports_input_layout = QHBoxLayout()
+        prev_reports_input_layout.addWidget(QLabel("Last Report File:"))
+        self.prev_report_file_input = QLineEdit()
+        self.prev_report_file_input.setPlaceholderText("Select previous report Excel file...")
+        self.prev_report_file_input.setMinimumWidth(200)
+        prev_reports_input_layout.addWidget(self.prev_report_file_input)
+        prev_reports_browse_btn = QPushButton("Browse")
+        prev_reports_browse_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        prev_reports_input_layout.addWidget(prev_reports_browse_btn)
+        prev_reports_browse_btn.clicked.connect(
+            lambda: self.browse_file(self.prev_report_file_input))
+        prev_reports_layout.addLayout(prev_reports_input_layout)
+
+        # Add infobox to explain this feature
+        info_label = QLabel("Note: Upload previous reports to track student group transfers. "
+                           "The system will identify students who switched groups and update their attendance accordingly.")
+        info_label.setWordWrap(True)
+        info_label.setStyleSheet("font-style: italic; color: #AAAAAA;")
+        prev_reports_layout.addWidget(info_label)
+
+        scroll_layout.addWidget(prev_reports_group)
+
+        # Reference Data Section
+        ref_group = QGroupBox("Reference Data")
+        ref_group.setStyleSheet(GROUP_BOX_STYLE)
+        ref_layout = QVBoxLayout(ref_group)
+
+        # Single line layout for reference data
+        ref_input_layout = QHBoxLayout()
+        ref_input_layout.addWidget(QLabel("Database File:"))
+        self.ref_file_input = QLineEdit()
+        self.ref_file_input.setPlaceholderText("Select Excel file...")
+        self.ref_file_input.setMinimumWidth(200)
+        ref_input_layout.addWidget(self.ref_file_input)
+        ref_browse_btn = QPushButton("Browse")
+        ref_browse_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        ref_input_layout.addWidget(ref_browse_btn)
+        ref_input_layout.addWidget(QLabel("Sheet Name:"))
+        self.ref_sheet_combo = QComboBox()
+        self.ref_sheet_combo.setMinimumWidth(100)
+        ref_input_layout.addWidget(self.ref_sheet_combo)
+        ref_browse_btn.clicked.connect(
+            lambda: self.browse_file(self.ref_file_input))
+        ref_layout.addLayout(ref_input_layout)
+        scroll_layout.addWidget(ref_group)
+
+        # Attendance Logs Section
+        log_group = QGroupBox("Attendance Logs")
+        log_group.setStyleSheet(GROUP_BOX_STYLE)
+        log_layout = QVBoxLayout(log_group)
+
+        # Single line layout for log data
+        log_input_layout = QHBoxLayout()
+        log_input_layout.addWidget(QLabel("Log File:"))
+        self.log_file_input = QLineEdit()
+        self.log_file_input.setPlaceholderText("Select Excel file...")
+        self.log_file_input.setMinimumWidth(200)
+        log_input_layout.addWidget(self.log_file_input)
+        log_browse_btn = QPushButton("Browse")
+        log_browse_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        log_input_layout.addWidget(log_browse_btn)
+        log_input_layout.addWidget(QLabel("Sheet Name:"))
+        self.log_sheet_combo = QComboBox()
+        self.log_sheet_combo.setMinimumWidth(100)
+        log_input_layout.addWidget(self.log_sheet_combo)
+        log_browse_btn.clicked.connect(
+            lambda: self.browse_file(self.log_file_input))
+        log_layout.addLayout(log_input_layout)
+        scroll_layout.addWidget(log_group)
+
+        # Session Schedules Section
+        schedule_group = QGroupBox("Sessions Schedules")
+        schedule_group.setStyleSheet(GROUP_BOX_STYLE)
+        schedule_layout = QVBoxLayout(schedule_group)
+
         self.schedule_table = QTableWidget()
         self.schedule_table.setColumnCount(5)
-        self.schedule_table.setHorizontalHeaderLabels(['Year', 'Module', 'File', 'Sheet', 'Total Sessions'])
+        self.schedule_table.setHorizontalHeaderLabels(
+            ['Year', 'Module', 'File', 'Sheet', 'Total Sessions'])
         self.schedule_table.setStyleSheet(TABLE_STYLE)
-        
+
         # Center align the header text
         header = self.schedule_table.horizontalHeader()
-        header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)  # Center header text
-        
+        header.setDefaultAlignment(
+            Qt.AlignmentFlag.AlignCenter)  # Center header text
+
         # Set column resize modes to stretch and fit content
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)  # Year
-        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)  # Module
+        header.setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch)  # Module
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)  # File
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)  # Sheet
-        header.setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)  # Total Sessions
-        
+        header.setSectionResizeMode(
+            4, QHeaderView.ResizeMode.Stretch)  # Total Sessions
+
         schedule_layout.addWidget(self.schedule_table)
         schedule_btn_layout = QHBoxLayout()
         add_schedule_btn = QPushButton("Add Schedule")
@@ -3288,8 +4173,8 @@ class AttendanceProcessor(QWidget):
         schedule_btn_layout.addWidget(add_schedule_btn)
         schedule_btn_layout.addWidget(remove_schedule_btn)
         schedule_layout.addLayout(schedule_btn_layout)
-        main_layout.addWidget(schedule_group)
-        
+        scroll_layout.addWidget(schedule_group)
+
         # Progress Bar Section
         progress_group = QGroupBox("Progress")
         progress_group.setStyleSheet(GROUP_BOX_STYLE)
@@ -3299,31 +4184,34 @@ class AttendanceProcessor(QWidget):
         self.progress_bar.setTextVisible(True)
         self.progress_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.progress_bar.setStyleSheet(PROGRESS_BAR_STYLE)
-        
+
         # Create loading gif label
         self.loading_label = QLabel()
-        self.loading_label.setFixedSize(24, 24)  # Adjust based on your GIF size
+        # Adjust based on your GIF size
+        self.loading_label.setFixedSize(24, 24)
         self.loading_label.setVisible(False)  # Hidden by default
-        
+
         # Create the movie object for the GIF
         self.loading_movie = QMovie()
-        self.loading_movie.setScaledSize(QSize(24, 24))  # Adjust based on your GIF size
+        # Adjust based on your GIF size
+        self.loading_movie.setScaledSize(QSize(24, 24))
         self.loading_label.setMovie(self.loading_movie)
-        
+
         # Make sure to have your loading.gif in the same directory as the script
-        loading_gif_path = os.path.join(os.path.dirname(__file__), 'loading.gif')
+        loading_gif_path = os.path.join(
+            os.path.dirname(__file__), 'loading.gif')
         if os.path.exists(loading_gif_path):
             self.loading_movie.setFileName(loading_gif_path)
         else:
             print(f"Warning: loading.gif not found at {loading_gif_path}")
-        
+
         # Create a horizontal layout to hold both the progress bar and loading animation
         progress_h_layout = QHBoxLayout()
         progress_h_layout.addWidget(self.progress_bar)
         progress_h_layout.addWidget(self.loading_label)
         progress_layout.addLayout(progress_h_layout)
-        
-        main_layout.addWidget(progress_group)
+
+        scroll_layout.addWidget(progress_group)
 
         # Output Console Section
         console_group = QGroupBox("Output Console")
@@ -3333,23 +4221,118 @@ class AttendanceProcessor(QWidget):
         self.output_console = QTextEdit()
         self.output_console.setReadOnly(True)
         self.output_console.setMaximumHeight(150)
-        self.output_console.setStyleSheet(CONSOLE_STYLE)  
+        self.output_console.setStyleSheet(CONSOLE_STYLE)
         console_layout.addWidget(self.output_console)
-        main_layout.addWidget(console_group)
+        scroll_layout.addWidget(console_group)
 
         # Bottom Buttons
         button_layout = QHBoxLayout()
+        
+        # Process Button
         process_btn = QPushButton("Process Attendance Records")
         process_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
         process_btn.clicked.connect(self.process_data)
         button_layout.addWidget(process_btn)
-        main_layout.addLayout(button_layout)
+        
+        # Update Report Button
+        update_btn = QPushButton("Update Report")
+        update_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        update_btn.clicked.connect(self.update_report)
+        button_layout.addWidget(update_btn)
+        
+        scroll_layout.addLayout(button_layout)
+        
+        # Set the scroll content as the scroll area's widget
+        scroll_area.setWidget(scroll_content)
+        
+        # Add scroll area to main layout
+        main_layout.addWidget(scroll_area)
 
         # Connect file input changes to sheet loading
         self.ref_file_input.textChanged.connect(
             lambda: self.load_sheets(self.ref_file_input.text(), self.ref_sheet_combo))
         self.log_file_input.textChanged.connect(
             lambda: self.load_sheets(self.log_file_input.text(), self.log_sheet_combo))
+        self.prev_report_file_input.textChanged.connect(
+            lambda: self.check_previous_report_file(self.prev_report_file_input.text()))
+
+    def check_previous_report_file(self, file_path):
+        """Check if the previous report file has the expected sheets"""
+        if os.path.isfile(file_path):
+            try:
+                wb = openpyxl.load_workbook(file_path, read_only=True)
+                # Check if the file has the expected sheets
+                required_sheets = ["Summary", "Attendance"]
+                has_required_sheets = all(sheet in wb.sheetnames for sheet in required_sheets)
+                
+                if not has_required_sheets:
+                    self.output_console.append("Warning: Previous report file may not have the expected format. "
+                                            "It should contain 'Summary' and 'Attendance' sheets.")
+                else:
+                    self.output_console.append("Previous report file loaded successfully.")
+                    
+                    # Try to extract the report date from the file name
+                    try:
+                        file_name = os.path.basename(file_path)
+                        # Look for date pattern in the filename (YYYYMMDD_HHMMSS)
+                        date_match = re.search(r'(\d{8}_\d{6})', file_name)
+                        if date_match:
+                            date_str = date_match.group(1)
+                            report_date = datetime.strptime(date_str, '%Y%m%d_%H%M%S')
+                            self.output_console.append(f"Previous report date: {report_date.strftime('%Y-%m-%d')}")
+                        else:
+                            # Try to extract from sheet names if they include dates
+                            for sheet in wb.sheetnames:
+                                date_match = re.search(r'(\d{2}/\d{2}/\d{4})', sheet)
+                                if date_match:
+                                    date_str = date_match.group(1)
+                                    report_date = datetime.strptime(date_str, '%d/%m/%Y')
+                                    self.output_console.append(f"Previous report date: {report_date.strftime('%Y-%m-%d')}")
+                                    break
+                    except Exception as e:
+                        self.output_console.append(f"Note: Could not extract report date from file. Will use file modification date as fallback.")
+            except Exception as e:
+                self.output_console.append(f"Error loading previous report file: {str(e)}")
+
+    def update_report(self):
+        """Handle the Update Report button click"""
+        # First, validate the inputs
+        if not self.validate_inputs():
+            return
+    
+        # Additionally validate that a previous report file is selected
+        if not self.prev_report_file_input.text() or not os.path.isfile(self.prev_report_file_input.text()):
+            self.show_custom_warning(
+                "Previous Report Required", 
+                "Please select a previous report file to update from")
+            return
+        
+        # Disable UI elements
+        self.setEnabled(False)
+        self.output_console.clear()
+        self.progress_bar.setValue(0)
+
+        # Show and start the loading animation
+        self.loading_label.setVisible(True)
+        self.loading_movie.start()
+
+        # Create and start update thread
+        self.update_thread = UpdateProcessThread(
+            self.prev_report_file_input.text(),
+            self.ref_file_input.text(),
+            self.ref_sheet_combo.currentText(),
+            self.log_file_input.text(),
+            self.log_sheet_combo.currentText(),
+            self.schedules
+        )
+
+        # Connect signals
+        self.update_thread.progress_updated.connect(self.update_progress)
+        self.update_thread.error_occurred.connect(self.handle_error)
+        self.update_thread.processing_complete.connect(self.handle_completion)
+
+        # Start processing
+        self.update_thread.start()
 
     def browse_file(self, input_field):
         filename, _ = QFileDialog.getOpenFileName(
@@ -3518,191 +4501,6 @@ class AttendanceProcessor(QWidget):
 
         success_dialog.exec()
 
-class ScheduleDialog(QDialog):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Add Schedule")
-        self.setMinimumWidth(400)
-        self.setStyleSheet("""
-            background-color: black; 
-            color: white;
-            QLabel {
-                color: white;
-            }
-        """)
-        
-        self.init_ui()
-
-        # Add input validation
-        self.total_input.setValidator(QIntValidator(1, 999, self))
-        self.year_input.setValidator(QIntValidator(1, 6, self))
-
-    def init_ui(self):
-        main_layout = QVBoxLayout(self)
-        main_layout.setSpacing(20)
-        main_layout.setContentsMargins(20, 20, 20, 20)
-
-        # Form Group
-        form_group = QGroupBox("Schedule Details")
-        form_group.setStyleSheet(GROUP_BOX_STYLE)
-        form_layout = QVBoxLayout(form_group)
-        form_layout.setSpacing(10)
-
-        # Form fields
-        self.year_input = QLineEdit()
-        self.year_input.setPlaceholderText("Academic year...")
-        self.module_input = QLineEdit()
-        self.module_input.setPlaceholderText("Module to process...")
-        self.total_input = QLineEdit()
-        self.total_input.setPlaceholderText("Total sessions number...")
-        self.file_input = QLineEdit()
-        self.file_input.setPlaceholderText("Select Excel file...")
-        self.sheet_combo = QComboBox()
-        
-        # Add department combobox
-        self.department_combo = QComboBox()
-        departments = [
-            "Anatomy", 
-            "Histology", 
-            "Physiology", 
-            "Biochemistry", 
-            "Pharmacology", 
-            "Pathology", 
-            "Parasitology", 
-            "Microbiology", 
-            "Forensics and Toxicology", 
-            "Community Medicine", 
-            "Clinical"
-        ]
-        self.department_combo.addItems(departments)
-
-        # Add form fields with consistent spacing
-        form_layout.addWidget(QLabel("Academic Year:"))
-        form_layout.addWidget(self.year_input)
-        form_layout.addWidget(QLabel("Module Name:"))
-        form_layout.addWidget(self.module_input)
-        form_layout.addWidget(QLabel("Department:"))
-        form_layout.addWidget(self.department_combo)
-        form_layout.addWidget(QLabel("Total Required Sessions:"))
-        form_layout.addWidget(self.total_input)
-
-        # Schedule File section with Browse button
-        file_label = QLabel("Schedule File:")
-        file_top_layout = QHBoxLayout()
-        file_top_layout.addWidget(file_label)
-        browse_btn = QPushButton("Browse")
-        browse_btn.clicked.connect(self.browse_file)
-        browse_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
-        file_top_layout.addWidget(browse_btn)
-        file_top_layout.addStretch()
-        form_layout.addLayout(file_top_layout)
-        form_layout.addWidget(self.file_input)
-
-        # Sheet selection
-        form_layout.addWidget(QLabel("Sheet Name:"))
-        form_layout.addWidget(self.sheet_combo)
-
-        main_layout.addWidget(form_group)
-
-        # Buttons at the bottom
-        button_layout = QHBoxLayout()
-        button_layout.addStretch()
-        ok_button = QPushButton("OK")
-        ok_button.clicked.connect(self.accept)
-        ok_button.setStyleSheet(STANDARD_BUTTON_STYLE)
-        cancel_button = QPushButton("Cancel")
-        cancel_button.clicked.connect(self.reject)
-        cancel_button.setStyleSheet(STANDARD_BUTTON_STYLE)
-        button_layout.addWidget(ok_button)
-        button_layout.addWidget(cancel_button)
-        main_layout.addLayout(button_layout)
-
-    def browse_file(self):
-        filename, _ = QFileDialog.getOpenFileName(
-            self, "Select Excel File", "", "Excel Files (*.xlsx)"
-        )
-        if filename:
-            self.file_input.setText(filename)
-            self.load_sheets(filename)
-
-    def load_sheets(self, file_path):
-        if os.path.isfile(file_path):
-            try:
-                wb = openpyxl.load_workbook(file_path, read_only=True)
-                self.sheet_combo.clear()
-                self.sheet_combo.addItems(wb.sheetnames)
-            except Exception as e:
-                QMessageBox.critical(self, "Error", f"Error loading workbook: {str(e)}")
-
-    def get_schedule_data(self):
-        return [
-            self.year_input.text(),
-            self.module_input.text(),
-            self.file_input.text(),
-            self.sheet_combo.currentText(),
-            int(self.total_input.text()),
-            self.department_combo.currentText()  # Add department to returned data
-        ]
-
-    def accept(self):
-        """Validate inputs before closing dialog"""
-        try:
-            # Check required fields
-            if not self.year_input.text().strip():
-                raise ValueError("Academic year is required")
-            if not self.module_input.text().strip():
-                raise ValueError("Module name is required")
-            if not self.total_input.text().strip():
-                raise ValueError("Total required sessions is required")
-            if not self.file_input.text().strip():
-                raise ValueError("Schedule file is required")
-            if not self.sheet_combo.currentText():
-                raise ValueError("Sheet name is required")
-            
-            # Validate numeric input
-            total_sessions = self.total_input.text()
-            if not total_sessions.isdigit():
-                raise ValueError("Total sessions must be a whole number")
-            if int(total_sessions) <= 0:
-                raise ValueError("Total sessions must be greater than zero")
-            
-            # Validate file exists
-            if not os.path.isfile(self.file_input.text()):
-                raise FileNotFoundError("Selected schedule file does not exist")
-
-        except (ValueError, FileNotFoundError) as e:
-            # Create custom message box
-            error_dialog = QMessageBox(self)
-            error_dialog.setWindowTitle("Invalid Input")
-            error_dialog.setText(str(e))
-            error_dialog.setIcon(QMessageBox.Icon.Warning)
-            
-            # Configure OK button
-            ok_button = error_dialog.addButton(QMessageBox.StandardButton.Ok)
-            ok_button.setStyleSheet(STANDARD_BUTTON_STYLE)
-            
-            # Style dialog background
-            error_dialog.setStyleSheet(f"""
-                QMessageBox {{
-                    background-color: {CARD_BG};
-                }}
-                QLabel {{
-                color: {TEXT_COLOR};
-                    font-size: 14px;
-                }}
-            """)
-            
-            error_dialog.exec()
-            return
-            
-        super().accept()
-
-    def return_to_home(self):
-        # Get the stacked widget and switch to the start page
-        stacked_widget = self.parent()
-        if isinstance(stacked_widget, QStackedWidget):
-            stacked_widget.setCurrentIndex(0)
-
 class ProcessThread(QThread):
     progress_updated = pyqtSignal(int)
     error_occurred = pyqtSignal(str)
@@ -3745,6 +4543,9 @@ class ProcessThread(QThread):
             output_dir = os.path.join(os.getcwd(), "attendance_reports")
             os.makedirs(output_dir, exist_ok=True)
             
+            # Get current date for sheet names
+            current_date = datetime.now().strftime('%d_%m_%Y')
+            
             # Process each schedule
             for year, module, sched_file, sched_sheet, total_required, department in self.schedules:
                 # Load schedule data
@@ -3770,18 +4571,24 @@ class ProcessThread(QThread):
                 output_wb = openpyxl.Workbook()
                 output_wb.remove(output_wb.active)
                 
-                # Create Summary sheet first, then Attendance sheet
-                self.create_summary_sheet(output_wb, 'Summary', valid_attendance, session_details,
+                # Create Summary sheet first, then Attendance sheet with date in sheet names
+                summary_sheet_name = f"Summary_{current_date}"
+                attendance_sheet_name = f"Attendance_{current_date}"
+                
+                self.create_summary_sheet(output_wb, summary_sheet_name, valid_attendance, session_details,
                                         student_map, f"Year {year}", completed_sessions, total_required, department)
-                self.create_valid_logs_sheet(output_wb, 'Attendance', valid_attendance)
+                self.create_valid_logs_sheet(output_wb, attendance_sheet_name, valid_attendance)
 
                 current_step += 1
                 self.progress_updated.emit(int(current_step / total_steps * 100))
                 
-                # Save output workbook with department in filename
+                # Generate timestamp for filename
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                
+                # Save output workbook with department and timestamp in filename
                 year_dir = os.path.join(output_dir, f"Year_{year}")
                 os.makedirs(year_dir, exist_ok=True)
-                output_path = os.path.join(year_dir, f"Y{year}_{module}_{department}_attendance.xlsx")
+                output_path = os.path.join(year_dir, f"Y{year}_{module}_{department}_attendance_{timestamp}.xlsx")
                 output_wb.save(output_path)
                 current_step += 1
                 self.progress_updated.emit(int(current_step / total_steps * 100))
@@ -3987,6 +4794,833 @@ class ProcessThread(QThread):
         for row in sheet.iter_rows():
             for cell in row:
                 cell.border = thin_border
+
+class UpdateProcessThread(QThread):
+    progress_updated = pyqtSignal(int)
+    error_occurred = pyqtSignal(str)
+    processing_complete = pyqtSignal()
+    
+    # Constants for configuration (both in minutes)
+    VALID_ATTENDANCE_BEFORE_MINUTES = 15
+    VALID_ATTENDANCE_AFTER_MINUTES = 150
+
+    def __init__(self, prev_report_file, ref_file, ref_sheet, log_file, log_sheet, schedules):
+        super().__init__()
+        self.prev_report_file = prev_report_file
+        self.ref_file = ref_file
+        self.ref_sheet = ref_sheet
+        self.log_file = log_file
+        self.log_sheet = log_sheet
+        self.schedules = schedules
+        self.prev_report_date = None
+
+    def run(self):
+        try:
+            # Calculate total steps
+            total_steps = 5 + len(self.schedules) * 6  # Extra steps for transfers analysis
+            current_step = 0
+            
+            # Load previous report data
+            prev_wb = openpyxl.load_workbook(self.prev_report_file)
+            self.extract_report_date()
+            
+            # Load previous summary data (to identify group transfers)
+            prev_summary_sheet = None
+            for sheet_name in prev_wb.sheetnames:
+                if sheet_name.startswith("Summary"):
+                    prev_summary_sheet = prev_wb[sheet_name]
+                    break
+            
+            if not prev_summary_sheet:
+                raise Exception("No Summary sheet found in previous report")
+                
+            # Load previous attendance data
+            prev_attendance_sheet = None
+            for sheet_name in prev_wb.sheetnames:
+                if sheet_name.startswith("Attendance"):
+                    prev_attendance_sheet = prev_wb[sheet_name]
+                    break
+                    
+            if not prev_attendance_sheet:
+                raise Exception("No Attendance sheet found in previous report")
+                
+            current_step += 1
+            self.progress_updated.emit(int(current_step / total_steps * 100))
+            
+            # Load reference data (current student groups)
+            ref_wb = openpyxl.load_workbook(self.ref_file)
+            ref_ws = ref_wb[self.ref_sheet]
+            student_db = list(ref_ws.values)
+            current_student_map = self.create_student_map(student_db)
+            current_step += 1
+            self.progress_updated.emit(int(current_step / total_steps * 100))
+            
+            # Extract previous student data from previous report
+            previous_student_map = self.extract_previous_student_map(prev_summary_sheet)
+            current_step += 1
+            self.progress_updated.emit(int(current_step / total_steps * 100))
+            
+            # Identify students who transferred groups
+            transferred_students = self.identify_transferred_students(previous_student_map, current_student_map)
+            current_step += 1
+            self.progress_updated.emit(int(current_step / total_steps * 100))
+            
+            # Load log data (attendance data)
+            log_wb = openpyxl.load_workbook(self.log_file)
+            log_ws = log_wb[self.log_sheet]
+            log_history = list(log_ws.values)
+            current_step += 1
+            self.progress_updated.emit(int(current_step / total_steps * 100))
+            
+            # Create output directory
+            output_dir = os.path.join(os.getcwd(), "attendance_reports")
+            os.makedirs(output_dir, exist_ok=True)
+            
+            # Get current date for sheet names
+            current_date = datetime.now().strftime('%d_%m_%Y')
+            
+            # Process each schedule with transfer awareness
+            for year, module, sched_file, sched_sheet, total_required, department in self.schedules:
+                # Load schedule data
+                sched_wb = openpyxl.load_workbook(sched_file)
+                sched_ws = sched_wb[sched_sheet]
+                session_schedule = list(sched_ws.values)
+                current_step += 1
+                self.progress_updated.emit(int(current_step / total_steps * 100))
+                
+                # Calculate sessions
+                completed_sessions = self.calculate_completed_sessions(session_schedule[1:])
+                session_details = self.calculate_session_details(session_schedule[1:])
+                current_step += 1
+                self.progress_updated.emit(int(current_step / total_steps * 100))
+                
+                # Extract previous attendance data
+                previous_attendance = self.extract_previous_attendance(prev_attendance_sheet, f"Year {year}")
+                current_step += 1
+                self.progress_updated.emit(int(current_step / total_steps * 100))
+                
+                # Validate attendance with transfer awareness
+                valid_attendance = self.validate_attendance_with_transfers(
+                    log_history, 
+                    session_schedule[1:], 
+                    current_student_map, 
+                    previous_student_map,
+                    transferred_students,
+                    previous_attendance,
+                    f"Year {year}"
+                )
+                current_step += 1
+                self.progress_updated.emit(int(current_step / total_steps * 100))
+                
+                # Create output workbook and sheets
+                output_wb = openpyxl.Workbook()
+                output_wb.remove(output_wb.active)
+                
+                # Create Summary sheet first, then Attendance sheet with date in sheet names
+                summary_sheet_name = f"Summary_{current_date}"
+                attendance_sheet_name = f"Attendance_{current_date}"
+                transfers_sheet_name = "Transfers"
+                
+                self.create_summary_sheet(
+                    output_wb, 
+                    summary_sheet_name, 
+                    valid_attendance, 
+                    session_details,
+                    current_student_map, 
+                    f"Year {year}", 
+                    completed_sessions, 
+                    total_required, 
+                    department
+                )
+                
+                self.create_valid_logs_sheet(output_wb, attendance_sheet_name, valid_attendance)
+                
+                # Create transfer log sheet
+                self.create_transfer_log_sheet(
+                    output_wb, 
+                    transfers_sheet_name, 
+                    transferred_students, 
+                    f"Year {year}"
+                )
+                current_step += 1
+                self.progress_updated.emit(int(current_step / total_steps * 100))
+                
+                # Generate timestamp for filename
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                
+                # Save output workbook with department and timestamp in filename
+                year_dir = os.path.join(output_dir, f"Year_{year}")
+                os.makedirs(year_dir, exist_ok=True)
+                output_path = os.path.join(year_dir, f"Y{year}_{module}_{department}_attendance_{timestamp}.xlsx")
+                output_wb.save(output_path)
+                current_step += 1
+                self.progress_updated.emit(int(current_step / total_steps * 100))
+
+            self.processing_complete.emit()
+
+        except Exception as e:
+            import traceback
+            error_msg = f"{str(e)}\n{traceback.format_exc()}"
+            self.error_occurred.emit(error_msg)
+
+    def extract_report_date(self):
+        """Extract the date of the previous report from file name or sheet names"""
+        try:
+            file_name = os.path.basename(self.prev_report_file)
+            
+            # Try to extract from filename (YYYYMMDD_HHMMSS)
+            date_match = re.search(r'(\d{8}_\d{6})', file_name)
+            if date_match:
+                date_str = date_match.group(1)
+                self.prev_report_date = datetime.strptime(date_str, '%Y%m%d_%H%M%S')
+                return
+                
+            # If not found in filename, try to extract from sheet names
+            wb = openpyxl.load_workbook(self.prev_report_file, read_only=True)
+            
+            for sheet in wb.sheetnames:
+                # Look for date in sheet name (Summary_DD_MM_YYYY or Attendance_DD_MM_YYYY)
+                date_match = re.search(r'_(\d{2}_\d{2}_\d{4})$', sheet)
+                if date_match:
+                    date_str = date_match.group(1)
+                    self.prev_report_date = datetime.strptime(date_str, '%d_%m_%Y')
+                    return
+                    
+            # If still not found, use file modification time as fallback
+            self.prev_report_date = datetime.fromtimestamp(os.path.getmtime(self.prev_report_file))
+            
+        except Exception as e:
+            self.prev_report_date = datetime.now() - timedelta(days=7)  # Default to a week ago
+            print(f"Error extracting report date: {str(e)}. Using fallback date: {self.prev_report_date}")
+
+    def create_student_map(self, student_db):
+        student_map = {}
+        for row in student_db[1:]:
+            if row[0]:
+                student_id = str(row[0])
+                email = f"{student_id}@med.asu.edu.eg"
+                student_map[student_id] = {
+                    "name": row[1],
+                    "year": row[2],
+                    "group": row[3],
+                    "email": email
+                }
+        return student_map
+
+    def extract_previous_student_map(self, prev_summary_sheet):
+        """Extract student data from previous report summary sheet"""
+        previous_student_map = {}
+        
+        # Get column indices (they might vary between reports)
+        header = [cell.value for cell in prev_summary_sheet[1]]
+        id_col = header.index("Student ID") + 1
+        name_col = header.index("Name") + 1
+        year_col = header.index("Year") + 1
+        group_col = header.index("Group") + 1
+        email_col = header.index("Email") + 1
+        
+        for row in prev_summary_sheet.iter_rows(min_row=2):
+            student_id = str(row[id_col-1].value)
+            if student_id:
+                previous_student_map[student_id] = {
+                    "name": row[name_col-1].value,
+                    "year": row[year_col-1].value,
+                    "group": row[group_col-1].value,
+                    "email": row[email_col-1].value
+                }
+                
+        return previous_student_map
+
+    def identify_transferred_students(self, previous_map, current_map):
+        """Identify students who have switched groups"""
+        transferred_students = {}
+        
+        for student_id, current_data in current_map.items():
+            if student_id in previous_map:
+                previous_data = previous_map[student_id]
+                
+                # Check if group has changed
+                if previous_data["group"] != current_data["group"]:
+                    transferred_students[student_id] = {
+                        "name": current_data["name"],
+                        "year": current_data["year"],
+                        "group_before": previous_data["group"],
+                        "group_after": current_data["group"],
+                        "transfer_date": self.prev_report_date  # We don't know exact date, use report date
+                    }
+                    
+        return transferred_students
+
+    def extract_previous_attendance(self, prev_attendance_sheet, target_year):
+        """Extract previous attendance data from the previous attendance sheet"""
+        previous_attendance = {}
+        
+        # Get header row
+        header = [cell.value for cell in prev_attendance_sheet[1]]
+        
+        # Identify column indices
+        id_col = header.index("Student ID") + 1
+        year_col = header.index("Year") + 1
+        group_col = header.index("Group") + 1
+        session_col = header.index("Session") + 1
+        location_col = header.index("Location") + 1
+        date_col = header.index("Date") + 1
+        time_col = header.index("Time") + 1
+        
+        for row in prev_attendance_sheet.iter_rows(min_row=2):
+            student_id = str(row[id_col-1].value)
+            year = row[year_col-1].value
+            
+            if year == target_year:
+                group = row[group_col-1].value
+                key = f"{year}-{group}"
+                
+                if key not in previous_attendance:
+                    previous_attendance[key] = []
+                    
+                # Convert date and time if they're datetime objects
+                date_value = row[date_col-1].value
+                time_value = row[time_col-1].value
+                
+                if isinstance(date_value, datetime):
+                    date_value = date_value.strftime('%d/%m/%Y')
+                if isinstance(time_value, datetime):
+                    time_value = time_value.strftime('%H:%M:%S')
+                
+                previous_attendance[key].append([
+                    student_id,
+                    None,  # Name is not needed here
+                    year,
+                    group,
+                    None,  # Email is not needed here
+                    row[session_col-1].value,
+                    row[location_col-1].value,
+                    date_value,
+                    time_value
+                ])
+                
+        return previous_attendance
+
+    def calculate_completed_sessions(self, session_schedule):
+        completed_sessions = {}
+        for row in session_schedule:
+            if len(row) >= 2:
+                year, group = row[:2]
+                key = f"{year}-{group}"
+                completed_sessions[key] = completed_sessions.get(key, 0) + 1
+        return completed_sessions
+
+    def calculate_session_details(self, session_schedule):
+        session_details = {}
+        
+        for row in session_schedule:
+            year, group, session, location = row[:4]
+            key = f"{year}-{group}"
+            if key not in session_details:
+                session_details[key] = {}
+            
+            session_details[key][session] = {
+                "location": location,
+                "required": 1
+            }
+            
+        return session_details
+
+    def validate_attendance_with_transfers(self, log_history, session_schedule, 
+                                          current_student_map, previous_student_map,
+                                          transferred_students, previous_attendance,
+                                          target_year):
+        """Validate attendance with awareness of group transfers"""
+        valid_attendance = {}
+        # Using the class constants to define time windows (both in minutes)
+        before_window = timedelta(minutes=self.VALID_ATTENDANCE_BEFORE_MINUTES)
+        after_window = timedelta(minutes=self.VALID_ATTENDANCE_AFTER_MINUTES)
+        session_map = {}
+        unique_logs = set()
+
+        # Create a mapping of sessions by location and date for each group
+        for row in session_schedule:
+            year, group, session, location, date, start_time = row[:6]
+            key = f"{year}-{group}"
+            session_datetime = self.parse_datetime(date, start_time)
+            session_key = f"{location}-{date}"
+            if key not in session_map:
+                session_map[key] = {}
+            session_map[key][session_key] = (session, session_datetime)
+
+        # First, import previous attendance records
+        for key, attendance_list in previous_attendance.items():
+            if key not in valid_attendance:
+                valid_attendance[key] = []
+            
+            for attendance in attendance_list:
+                valid_attendance[key].append(attendance)
+                # Add to unique logs to prevent duplicates
+                student_id = attendance[0]
+                location = attendance[6]
+                date = attendance[7]
+                unique_logs.add(f"{student_id}-{location}-{date}")
+
+        # Process new log data
+        for row in log_history[1:]:
+            if len(row) >= 4:
+                student_id, location, date, time = row[:4]
+                student_id = str(student_id)
+                
+                # Skip if this student doesn't exist in either map
+                if student_id not in current_student_map and student_id not in previous_student_map:
+                    continue
+                
+                # Get student data - prefer current map, fall back to previous
+                student = current_student_map.get(student_id, previous_student_map.get(student_id))
+                
+                # Skip if student is not in the target year
+                if student['year'] != target_year:
+                    continue
+                
+                # Normal case: student didn't transfer
+                if student_id not in transferred_students:
+                    key = f"{student['year']}-{student['group']}"
+                    session_key = f"{location}-{date}"
+                    
+                    if key in session_map and session_key in session_map[key]:
+                        session, session_start = session_map[key][session_key]
+                        log_datetime = self.parse_datetime(date, time)
+                        
+                        # Check if log is within time window
+                        if session_start - before_window <= log_datetime <= session_start + after_window:
+                            unique_log_key = f"{student_id}-{location}-{date}"
+                            if unique_log_key not in unique_logs:
+                                unique_logs.add(unique_log_key)
+                                if key not in valid_attendance:
+                                    valid_attendance[key] = []
+                                valid_attendance[key].append([
+                                    student_id, student['name'], student['year'],
+                                    student['group'], student['email'], session,
+                                    location, date, time
+                                ])
+                
+                # Special case: student transferred groups
+                else:
+                    transfer_info = transferred_students[student_id]
+                    
+                    # Check both the old and new group's sessions
+                    old_key = f"{student['year']}-{transfer_info['group_before']}"
+                    new_key = f"{student['year']}-{transfer_info['group_after']}"
+                    session_key = f"{location}-{date}"
+                    
+                    # Check old group sessions
+                    if old_key in session_map and session_key in session_map[old_key]:
+                        session, session_start = session_map[old_key][session_key]
+                        log_datetime = self.parse_datetime(date, time)
+                        
+                        # Check if log is within time window
+                        if session_start - before_window <= log_datetime <= session_start + after_window:
+                            unique_log_key = f"{student_id}-{location}-{date}"
+                            if unique_log_key not in unique_logs:
+                                unique_logs.add(unique_log_key)
+                                if new_key not in valid_attendance:  # Use NEW group for updated attendance
+                                    valid_attendance[new_key] = []
+                                valid_attendance[new_key].append([
+                                    student_id, student['name'], student['year'],
+                                    transfer_info['group_after'], student['email'], session,
+                                    location, date, time
+                                ])
+                    
+                    # Check new group sessions
+                    if new_key in session_map and session_key in session_map[new_key]:
+                        session, session_start = session_map[new_key][session_key]
+                        log_datetime = self.parse_datetime(date, time)
+                        
+                        # Check if log is within time window
+                        if session_start - before_window <= log_datetime <= session_start + after_window:
+                            unique_log_key = f"{student_id}-{location}-{date}"
+                            if unique_log_key not in unique_logs:
+                                unique_logs.add(unique_log_key)
+                                if new_key not in valid_attendance:
+                                    valid_attendance[new_key] = []
+                                valid_attendance[new_key].append([
+                                    student_id, student['name'], student['year'],
+                                    transfer_info['group_after'], student['email'], session,
+                                    location, date, time
+                                ])
+        
+        return valid_attendance
+
+    def parse_datetime(self, date, time):
+        if isinstance(date, str):
+            date = datetime.strptime(date, '%d/%m/%Y').date()
+        elif isinstance(date, datetime):
+            date = date.date()
+            
+        if isinstance(time, str):
+            time = datetime.strptime(time, '%H:%M:%S').time()
+        elif isinstance(time, datetime):
+            time = time.time()
+            
+        return datetime.combine(date, time)
+
+    def create_valid_logs_sheet(self, workbook, sheet_name, data):
+        sheet = workbook.create_sheet(sheet_name)
+        header = ["Student ID", "Name", "Year", "Group", "Email", "Session", "Location", "Date", "Time"]
+        sheet.append(header)
+        
+        # Format header row
+        for cell in sheet[1]:
+            cell.font = openpyxl.styles.Font(bold=True)
+            cell.fill = openpyxl.styles.PatternFill(start_color="DDEBF7", end_color="DDEBF7", fill_type="solid")
+            cell.alignment = openpyxl.styles.Alignment(horizontal="center")
+        
+        # Freeze the header row
+        sheet.freeze_panes = "C2"
+        
+        for key in data:
+            for row in data[key]:
+                sheet.append(row)
+        
+        # Format date and time columns
+        for col in 'H', 'I':
+            for cell in sheet[col]:
+                cell.number_format = 'DD/MM/YYYY' if col == 'H' else 'HH:MM:SS'
+        
+        # Auto-adjust column widths
+        for column in sheet.columns:
+            max_length = max(len(str(cell.value)) for cell in column)
+            sheet.column_dimensions[openpyxl.utils.get_column_letter(column[0].column)].width = max_length + 2
+
+    def create_summary_sheet(self, workbook, sheet_name, valid_attendance, session_details,
+                          student_map, target_year, completed_sessions, total_required_sessions, department):
+        sheet = workbook.create_sheet(sheet_name)
+        
+        # Get all unique sessions
+        all_sessions = set()
+        for key, sessions in session_details.items():
+            all_sessions.update(sessions.keys())
+        sorted_sessions = sorted(all_sessions)
+    
+        header = ["Student ID", "Name", "Year", "Group", "Email", 
+                 "Sessions Left", "Sessions Completed", "Total Required", "Total Attended"]
+        
+        # Add columns for each session with department name
+        for session in sorted_sessions:
+            header.extend([f"{department} session {session} (Required)", f"{department} session {session} (Attended)"])
+        
+        sheet.append(header)
+        
+        # Format header row
+        for cell in sheet[1]:
+            cell.font = openpyxl.styles.Font(bold=True)
+            cell.fill = openpyxl.styles.PatternFill(start_color="DDEBF7", end_color="DDEBF7", fill_type="solid")
+            cell.alignment = openpyxl.styles.Alignment(horizontal="center")
+        
+        # Freeze the header row
+        sheet.freeze_panes = "C2"
+        
+        # Create alternating row colors for better readability
+        light_blue = openpyxl.styles.PatternFill(start_color="F2F7FD", end_color="F2F7FD", fill_type="solid")
+    
+        for student_id, student in student_map.items():
+            if student['year'] == target_year:
+                key = f"{student['year']}-{student['group']}"
+                group_completed = completed_sessions.get(key, 0)
+                total_attended = 0
+                attendance_by_session = {}
+                
+                # Calculate attendance for each session
+                for entry in valid_attendance.get(key, []):
+                    if entry[0] == student_id:
+                        session = entry[5]
+                        attendance_by_session[session] = attendance_by_session.get(session, 0) + 1
+                        total_attended += 1
+    
+                sessions_left = total_required_sessions - group_completed
+    
+                row = [
+                    student_id, student['name'], student['year'], student['group'],
+                    student['email'], sessions_left, group_completed,
+                    total_required_sessions, total_attended
+                ]
+    
+                # Add attendance data for each session
+                for session in sorted_sessions:
+                    session_req = session_details.get(key, {}).get(session, {"required": 0})
+                    session_att = attendance_by_session.get(session, 0)
+                    row.extend([session_req["required"], session_att])
+    
+                sheet.append(row)
+        
+        # Apply alternating row colors
+        for i, row in enumerate(sheet.iter_rows(min_row=2)):
+            if i % 2 == 0:  # Apply light blue to every other row
+                for cell in row:
+                    cell.fill = light_blue
+    
+        # Format columns
+        for column in sheet.columns:
+            max_length = max(len(str(cell.value)) for cell in column)
+            sheet.column_dimensions[openpyxl.utils.get_column_letter(column[0].column)].width = max_length + 2
+            
+        # Add borders to all cells
+        thin_border = openpyxl.styles.Border(
+            left=openpyxl.styles.Side(style='thin'),
+            right=openpyxl.styles.Side(style='thin'),
+            top=openpyxl.styles.Side(style='thin'),
+            bottom=openpyxl.styles.Side(style='thin')
+        )
+        
+        for row in sheet.iter_rows():
+            for cell in row:
+                cell.border = thin_border
+
+    def create_transfer_log_sheet(self, workbook, sheet_name, transferred_students, target_year):
+        """Create a sheet logging student transfers"""
+        sheet = workbook.create_sheet(sheet_name)
+        
+        # Set up header
+        header = ["Student ID", "Name", "Year", "Group Before", "Group After", "Transfer Date"]
+        sheet.append(header)
+        
+        # Format header row
+        for cell in sheet[1]:
+            cell.font = openpyxl.styles.Font(bold=True)
+            cell.fill = openpyxl.styles.PatternFill(start_color="DDEBF7", end_color="DDEBF7", fill_type="solid")
+            cell.alignment = openpyxl.styles.Alignment(horizontal="center")
+        
+        # Freeze the header row
+        sheet.freeze_panes = "C2"
+        
+        # Add transfer data
+        for student_id, transfer_info in transferred_students.items():
+            if transfer_info["year"] == target_year:
+                transfer_date = transfer_info["transfer_date"].strftime('%d/%m/%Y') if transfer_info["transfer_date"] else "Unknown"
+                
+                row = [
+                    student_id,
+                    transfer_info["name"],
+                    transfer_info["year"],
+                    transfer_info["group_before"],
+                    transfer_info["group_after"],
+                    transfer_date
+                ]
+                
+                sheet.append(row)
+        
+        # Format date column
+        for cell in sheet['F']:
+            if cell.row > 1:  # Skip header
+                try:
+                    cell.number_format = 'DD/MM/YYYY'
+                except:
+                    pass  # In case the date is "Unknown"
+        
+        # Create alternating row colors
+        light_blue = openpyxl.styles.PatternFill(start_color="F2F7FD", end_color="F2F7FD", fill_type="solid")
+        for i, row in enumerate(sheet.iter_rows(min_row=2)):
+            if i % 2 == 0:
+                for cell in row:
+                    cell.fill = light_blue
+        
+        # Auto-adjust column widths
+        for column in sheet.columns:
+            max_length = max(len(str(cell.value)) for cell in column)
+            sheet.column_dimensions[openpyxl.utils.get_column_letter(column[0].column)].width = max_length + 2
+        
+        # Add borders
+        thin_border = openpyxl.styles.Border(
+            left=openpyxl.styles.Side(style='thin'),
+            right=openpyxl.styles.Side(style='thin'),
+            top=openpyxl.styles.Side(style='thin'),
+            bottom=openpyxl.styles.Side(style='thin')
+        )
+        
+        for row in sheet.iter_rows():
+            for cell in row:
+                cell.border = thin_border
+
+class ScheduleDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Add Schedule")
+        self.setMinimumWidth(400)
+        self.setStyleSheet("""
+            background-color: black; 
+            color: white;
+            QLabel {
+                color: white;
+            }
+        """)
+        
+        self.init_ui()
+
+        # Add input validation
+        self.total_input.setValidator(QIntValidator(1, 999, self))
+        self.year_input.setValidator(QIntValidator(1, 6, self))
+
+    def init_ui(self):
+        main_layout = QVBoxLayout(self)
+        main_layout.setSpacing(20)
+        main_layout.setContentsMargins(20, 20, 20, 20)
+
+        # Form Group
+        form_group = QGroupBox("Schedule Details")
+        form_group.setStyleSheet(GROUP_BOX_STYLE)
+        form_layout = QVBoxLayout(form_group)
+        form_layout.setSpacing(10)
+
+        # Form fields
+        self.year_input = QLineEdit()
+        self.year_input.setPlaceholderText("Academic year...")
+        self.module_input = QLineEdit()
+        self.module_input.setPlaceholderText("Module to process...")
+        self.total_input = QLineEdit()
+        self.total_input.setPlaceholderText("Total sessions number...")
+        self.file_input = QLineEdit()
+        self.file_input.setPlaceholderText("Select Excel file...")
+        self.sheet_combo = QComboBox()
+        
+        # Add department combobox
+        self.department_combo = QComboBox()
+        departments = [
+            "Anatomy", 
+            "Histology", 
+            "Physiology", 
+            "Biochemistry", 
+            "Pharmacology", 
+            "Pathology", 
+            "Parasitology", 
+            "Microbiology", 
+            "Forensics and Toxicology", 
+            "Community Medicine", 
+            "Clinical"
+        ]
+        self.department_combo.addItems(departments)
+
+        # Add form fields with consistent spacing
+        form_layout.addWidget(QLabel("Academic Year:"))
+        form_layout.addWidget(self.year_input)
+        form_layout.addWidget(QLabel("Module Name:"))
+        form_layout.addWidget(self.module_input)
+        form_layout.addWidget(QLabel("Department:"))
+        form_layout.addWidget(self.department_combo)
+        form_layout.addWidget(QLabel("Total Required Sessions:"))
+        form_layout.addWidget(self.total_input)
+
+        # Schedule File section with Browse button
+        file_label = QLabel("Schedule File:")
+        file_top_layout = QHBoxLayout()
+        file_top_layout.addWidget(file_label)
+        browse_btn = QPushButton("Browse")
+        browse_btn.clicked.connect(self.browse_file)
+        browse_btn.setStyleSheet(STANDARD_BUTTON_STYLE)
+        file_top_layout.addWidget(browse_btn)
+        file_top_layout.addStretch()
+        form_layout.addLayout(file_top_layout)
+        form_layout.addWidget(self.file_input)
+
+        # Sheet selection
+        form_layout.addWidget(QLabel("Sheet Name:"))
+        form_layout.addWidget(self.sheet_combo)
+
+        main_layout.addWidget(form_group)
+
+        # Buttons at the bottom
+        button_layout = QHBoxLayout()
+        button_layout.addStretch()
+        ok_button = QPushButton("OK")
+        ok_button.clicked.connect(self.accept)
+        ok_button.setStyleSheet(STANDARD_BUTTON_STYLE)
+        cancel_button = QPushButton("Cancel")
+        cancel_button.clicked.connect(self.reject)
+        cancel_button.setStyleSheet(STANDARD_BUTTON_STYLE)
+        button_layout.addWidget(ok_button)
+        button_layout.addWidget(cancel_button)
+        main_layout.addLayout(button_layout)
+
+    def browse_file(self):
+        filename, _ = QFileDialog.getOpenFileName(
+            self, "Select Excel File", "", "Excel Files (*.xlsx)"
+        )
+        if filename:
+            self.file_input.setText(filename)
+            self.load_sheets(filename)
+
+    def load_sheets(self, file_path):
+        if os.path.isfile(file_path):
+            try:
+                wb = openpyxl.load_workbook(file_path, read_only=True)
+                self.sheet_combo.clear()
+                self.sheet_combo.addItems(wb.sheetnames)
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Error loading workbook: {str(e)}")
+
+    def get_schedule_data(self):
+        return [
+            self.year_input.text(),
+            self.module_input.text(),
+            self.file_input.text(),
+            self.sheet_combo.currentText(),
+            int(self.total_input.text()),
+            self.department_combo.currentText()  # Add department to returned data
+        ]
+
+    def accept(self):
+        """Validate inputs before closing dialog"""
+        try:
+            # Check required fields
+            if not self.year_input.text().strip():
+                raise ValueError("Academic year is required")
+            if not self.module_input.text().strip():
+                raise ValueError("Module name is required")
+            if not self.total_input.text().strip():
+                raise ValueError("Total required sessions is required")
+            if not self.file_input.text().strip():
+                raise ValueError("Schedule file is required")
+            if not self.sheet_combo.currentText():
+                raise ValueError("Sheet name is required")
+            
+            # Validate numeric input
+            total_sessions = self.total_input.text()
+            if not total_sessions.isdigit():
+                raise ValueError("Total sessions must be a whole number")
+            if int(total_sessions) <= 0:
+                raise ValueError("Total sessions must be greater than zero")
+            
+            # Validate file exists
+            if not os.path.isfile(self.file_input.text()):
+                raise FileNotFoundError("Selected schedule file does not exist")
+
+        except (ValueError, FileNotFoundError) as e:
+            # Create custom message box
+            error_dialog = QMessageBox(self)
+            error_dialog.setWindowTitle("Invalid Input")
+            error_dialog.setText(str(e))
+            error_dialog.setIcon(QMessageBox.Icon.Warning)
+            
+            # Configure OK button
+            ok_button = error_dialog.addButton(QMessageBox.StandardButton.Ok)
+            ok_button.setStyleSheet(STANDARD_BUTTON_STYLE)
+            
+            # Style dialog background
+            error_dialog.setStyleSheet(f"""
+                QMessageBox {{
+                    background-color: {CARD_BG};
+                }}
+                QLabel {{
+                color: {TEXT_COLOR};
+                    font-size: 14px;
+                }}
+            """)
+            
+            error_dialog.exec()
+            return
+            
+        super().accept()
+
+    def return_to_home(self):
+        # Get the stacked widget and switch to the start page
+        stacked_widget = self.parent()
+        if isinstance(stacked_widget, QStackedWidget):
+            stacked_widget.setCurrentIndex(0)
     
 #==========================================================attendance analyzer==========================================================#
 
@@ -5662,7 +7296,7 @@ class MainApplication(QMainWindow):
         self.dashboard_page = AttendanceDashboard()  
         self.schedule_manager_page = ScheduleManager() 
         self.reference_preparer_page = ReferenceFilePreparer() 
-
+        self.appeal_processor_page = AppealProcessor()
 
         # Add pages to stacked widget
         self.stacked_widget.addWidget(self.start_page)
@@ -5673,8 +7307,7 @@ class MainApplication(QMainWindow):
         self.stacked_widget.addWidget(self.dashboard_page)  
         self.stacked_widget.addWidget(self.schedule_manager_page) 
         self.stacked_widget.addWidget(self.reference_preparer_page) 
-
-
+        self.stacked_widget.addWidget(self.appeal_processor_page)
 
         # Connect start page buttons to switch pages
         self.start_page.info_button.clicked.connect(self.show_info) 
@@ -5683,7 +7316,8 @@ class MainApplication(QMainWindow):
         self.start_page.populate_btn.clicked.connect(self.show_populator)
         self.start_page.dashboard_btn.clicked.connect(self.show_dashboard)
         self.start_page.schedule_btn.clicked.connect(self.show_schedule_manager)
-        self.start_page.reference_btn.clicked.connect(self.show_reference_preparer) 
+        self.start_page.reference_btn.clicked.connect(self.show_reference_preparer)                
+        self.start_page.appeal_btn.clicked.connect(self.show_appeal_processor)
 
         
         # Set the window style
@@ -5713,6 +7347,9 @@ class MainApplication(QMainWindow):
 
     def show_reference_preparer(self):
         self.stacked_widget.setCurrentWidget(self.reference_preparer_page)
+
+    def show_appeal_processor(self):
+        self.stacked_widget.setCurrentWidget(self.appeal_processor_page)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
